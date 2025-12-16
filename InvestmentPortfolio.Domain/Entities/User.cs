@@ -15,7 +15,7 @@ public class User
     public int UserId { get; set; }
 
     /// <summary>
-    /// User's email
+    /// Email of the user
     /// </summary>
     public string Email { get; set; } = string.Empty;
 
@@ -25,7 +25,7 @@ public class User
     public string PasswordHash { get; set; } = string.Empty;
 
     /// <summary>
-    /// User's full name
+    /// Full name of the user
     /// </summary>
     public string FullName { get; set; } = string.Empty;
 

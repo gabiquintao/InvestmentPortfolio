@@ -18,12 +18,12 @@ public class Transaction
 	public int TransactionId { get; set; }
 
 	/// <summary>
-	/// Identificador do portfolio
+	/// Identificador of the portfolio
 	/// </summary>
 	public int PortfolioId { get; set; }
 
 	/// <summary>
-	/// Identificador of the portfolio
+	/// Identifier of the asset
 	/// </summary>
 	public int AssetId { get; set; }
 
