@@ -1,0 +1,6 @@
+@InvestmentPortfolio.API_HostAddress = http://localhost:5111
+
+GET {{InvestmentPortfolio.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
