@@ -4,7 +4,7 @@ using InvestmentPortfolio.Domain.Interfaces;
 namespace InvestmentPortfolio.Infrastructure.UnitOfWork;
 
 /// <summary>
-/// Unit of work implementation for managing transactions
+/// Unit of work implementation for managing database transactions and repositories.
 /// </summary>
 public class UnitOfWork : IUnitOfWork
 {
@@ -13,6 +13,15 @@ public class UnitOfWork : IUnitOfWork
 	private DbTransaction? _transaction;
 	private bool _disposed;
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="UnitOfWork"/> class.
+	/// </summary>
+	/// <param name="connectionFactory">The database connection factory.</param>
+	/// <param name="users">User repository.</param>
+	/// <param name="portfolios">Portfolio repository.</param>
+	/// <param name="assets">Asset repository.</param>
+	/// <param name="transactions">Transaction repository.</param>
+	/// <param name="alerts">Alert repository.</param>
 	public UnitOfWork(
 		IDbConnectionFactory connectionFactory,
 		IUserRepository users,
@@ -29,12 +38,34 @@ public class UnitOfWork : IUnitOfWork
 		Alerts = alerts ?? throw new ArgumentNullException(nameof(alerts));
 	}
 
+	/// <summary>
+	/// Gets the user repository.
+	/// </summary>
 	public IUserRepository Users { get; }
+
+	/// <summary>
+	/// Gets the portfolio repository.
+	/// </summary>
 	public IPortfolioRepository Portfolios { get; }
+
+	/// <summary>
+	/// Gets the asset repository.
+	/// </summary>
 	public IAssetRepository Assets { get; }
+
+	/// <summary>
+	/// Gets the transaction repository.
+	/// </summary>
 	public ITransactionRepository Transactions { get; }
+
+	/// <summary>
+	/// Gets the alert repository.
+	/// </summary>
 	public IAlertRepository Alerts { get; }
 
+	/// <summary>
+	/// Begins a new database transaction.
+	/// </summary>
 	public async Task BeginTransactionAsync()
 	{
 		_connection = _connectionFactory.CreateConnection() as DbConnection
@@ -44,6 +75,10 @@ public class UnitOfWork : IUnitOfWork
 		_transaction = await _connection.BeginTransactionAsync();
 	}
 
+	/// <summary>
+	/// Commits the current transaction.
+	/// </summary>
+	/// <exception cref="InvalidOperationException">Thrown if no transaction has been started.</exception>
 	public async Task CommitAsync()
 	{
 		if (_transaction == null)
@@ -64,6 +99,10 @@ public class UnitOfWork : IUnitOfWork
 		}
 	}
 
+	/// <summary>
+	/// Rolls back the current transaction.
+	/// </summary>
+	/// <exception cref="InvalidOperationException">Thrown if no transaction has been started.</exception>
 	public async Task RollbackAsync()
 	{
 		if (_transaction == null)
@@ -73,14 +112,22 @@ public class UnitOfWork : IUnitOfWork
 		await DisposeTransactionAndConnectionAsync();
 	}
 
+	/// <summary>
+	/// Saves changes to the database.
+	/// </summary>
+	/// <remarks>
+	/// In ADO.NET, changes are automatically applied. This method exists to maintain interface consistency.
+	/// </remarks>
+	/// <returns>An integer indicating the number of affected records (always 0 for ADO.NET).</returns>
 	public async Task<int> SaveChangesAsync()
 	{
-		// On ADO.NET, changes are automatically applied
-		// This method exists to maintain the interface consistent.
 		await Task.CompletedTask;
 		return 0;
 	}
 
+	/// <summary>
+	/// Disposes the transaction and connection.
+	/// </summary>
 	private async Task DisposeTransactionAndConnectionAsync()
 	{
 		if (_transaction != null)
@@ -97,12 +144,19 @@ public class UnitOfWork : IUnitOfWork
 		}
 	}
 
+	/// <summary>
+	/// Disposes the unit of work and its resources.
+	/// </summary>
 	public void Dispose()
 	{
 		Dispose(true);
 		GC.SuppressFinalize(this);
 	}
 
+	/// <summary>
+	/// Disposes managed and unmanaged resources.
+	/// </summary>
+	/// <param name="disposing">True if disposing managed resources; otherwise, false.</param>
 	protected virtual void Dispose(bool disposing)
 	{
 		if (!_disposed)

@@ -11,17 +11,26 @@ using InvestmentPortfolio.Domain.Interfaces;
 namespace InvestmentPortfolio.Infrastructure.Repositories;
 
 /// <summary>
-/// Repository for assets operations
+/// Repository for assets operations.
 /// </summary>
 public class AssetRepository : IAssetRepository
 {
 	private readonly IDbConnectionFactory _connectionFactory;
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="AssetRepository"/> class.
+	/// </summary>
+	/// <param name="connectionFactory">The database connection factory.</param>
 	public AssetRepository(IDbConnectionFactory connectionFactory)
 	{
 		_connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
 	}
 
+	/// <summary>
+	/// Gets an asset by its unique identifier.
+	/// </summary>
+	/// <param name="assetId">The asset ID.</param>
+	/// <returns>The asset if found; otherwise, null.</returns>
 	public async Task<Asset?> GetByIdAsync(int assetId)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -47,6 +56,11 @@ public class AssetRepository : IAssetRepository
 		return null;
 	}
 
+	/// <summary>
+	/// Gets all assets in a specific portfolio.
+	/// </summary>
+	/// <param name="portfolioId">The portfolio ID.</param>
+	/// <returns>A collection of assets.</returns>
 	public async Task<IEnumerable<Asset>> GetByPortfolioIdAsync(int portfolioId)
 	{
 		var assets = new List<Asset>();
@@ -75,6 +89,11 @@ public class AssetRepository : IAssetRepository
 		return assets;
 	}
 
+	/// <summary>
+	/// Creates a new asset in the database.
+	/// </summary>
+	/// <param name="asset">The asset to create.</param>
+	/// <returns>The ID of the created asset.</returns>
 	public async Task<int> CreateAsync(Asset asset)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -100,6 +119,11 @@ public class AssetRepository : IAssetRepository
 		return Convert.ToInt32(assetId);
 	}
 
+	/// <summary>
+	/// Updates an existing asset.
+	/// </summary>
+	/// <param name="asset">The asset to update.</param>
+	/// <returns>True if update succeeded; otherwise, false.</returns>
 	public async Task<bool> UpdateAsync(Asset asset)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -121,6 +145,11 @@ public class AssetRepository : IAssetRepository
 		return rowsAffected > 0;
 	}
 
+	/// <summary>
+	/// Deletes an asset by its ID.
+	/// </summary>
+	/// <param name="assetId">The asset ID.</param>
+	/// <returns>True if deletion succeeded; otherwise, false.</returns>
 	public async Task<bool> DeleteAsync(int assetId)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -138,6 +167,12 @@ public class AssetRepository : IAssetRepository
 		return rowsAffected > 0;
 	}
 
+	/// <summary>
+	/// Checks if an asset exists in a portfolio.
+	/// </summary>
+	/// <param name="portfolioId">The portfolio ID.</param>
+	/// <param name="symbol">The asset symbol.</param>
+	/// <returns>True if the asset exists; otherwise, false.</returns>
 	public async Task<bool> ExistsInPortfolioAsync(int portfolioId, string symbol)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -158,8 +193,10 @@ public class AssetRepository : IAssetRepository
 	}
 
 	/// <summary>
-	/// Maps a DataReader to an Asset object
+	/// Maps a data reader row to an <see cref="Asset"/> object.
 	/// </summary>
+	/// <param name="reader">The data reader.</param>
+	/// <returns>The mapped <see cref="Asset"/>.</returns>
 	private static Asset MapAsset(IDataReader reader)
 	{
 		return new Asset

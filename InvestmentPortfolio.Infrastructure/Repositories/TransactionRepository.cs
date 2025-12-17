@@ -11,17 +11,26 @@ using InvestmentPortfolio.Domain.Interfaces;
 namespace InvestmentPortfolio.Infrastructure.Repositories;
 
 /// <summary>
-/// Repository for transactions operations
+/// Repository for transactions operations.
 /// </summary>
 public class TransactionRepository : ITransactionRepository
 {
 	private readonly IDbConnectionFactory _connectionFactory;
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="TransactionRepository"/> class.
+	/// </summary>
+	/// <param name="connectionFactory">The database connection factory.</param>
 	public TransactionRepository(IDbConnectionFactory connectionFactory)
 	{
 		_connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
 	}
 
+	/// <summary>
+	/// Gets a transaction by its unique identifier.
+	/// </summary>
+	/// <param name="transactionId">The transaction ID.</param>
+	/// <returns>The transaction if found; otherwise, null.</returns>
 	public async Task<Transaction?> GetByIdAsync(int transactionId)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -50,6 +59,11 @@ public class TransactionRepository : ITransactionRepository
 		return null;
 	}
 
+	/// <summary>
+	/// Gets all transactions for a specific portfolio.
+	/// </summary>
+	/// <param name="portfolioId">The portfolio ID.</param>
+	/// <returns>A collection of transactions.</returns>
 	public async Task<IEnumerable<Transaction>> GetByPortfolioIdAsync(int portfolioId)
 	{
 		var transactions = new List<Transaction>();
@@ -81,6 +95,11 @@ public class TransactionRepository : ITransactionRepository
 		return transactions;
 	}
 
+	/// <summary>
+	/// Gets all transactions for a specific asset.
+	/// </summary>
+	/// <param name="assetId">The asset ID.</param>
+	/// <returns>A collection of transactions.</returns>
 	public async Task<IEnumerable<Transaction>> GetByAssetIdAsync(int assetId)
 	{
 		var transactions = new List<Transaction>();
@@ -112,6 +131,11 @@ public class TransactionRepository : ITransactionRepository
 		return transactions;
 	}
 
+	/// <summary>
+	/// Gets all transactions for a specific user.
+	/// </summary>
+	/// <param name="userId">The user ID.</param>
+	/// <returns>A collection of transactions.</returns>
 	public async Task<IEnumerable<Transaction>> GetByUserIdAsync(int userId)
 	{
 		var transactions = new List<Transaction>();
@@ -144,6 +168,11 @@ public class TransactionRepository : ITransactionRepository
 		return transactions;
 	}
 
+	/// <summary>
+	/// Creates a new transaction in the database.
+	/// </summary>
+	/// <param name="transaction">The transaction to create.</param>
+	/// <returns>The ID of the created transaction.</returns>
 	public async Task<int> CreateAsync(Transaction transaction)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -174,6 +203,13 @@ public class TransactionRepository : ITransactionRepository
 		return Convert.ToInt32(transactionId);
 	}
 
+	/// <summary>
+	/// Gets all transactions for a portfolio within a date range.
+	/// </summary>
+	/// <param name="portfolioId">The portfolio ID.</param>
+	/// <param name="start">The start date (inclusive).</param>
+	/// <param name="end">The end date (inclusive).</param>
+	/// <returns>A collection of transactions within the date range.</returns>
 	public async Task<IEnumerable<Transaction>> GetByDateRangeAsync(int portfolioId, DateTime start, DateTime end)
 	{
 		var transactions = new List<Transaction>();
@@ -210,8 +246,10 @@ public class TransactionRepository : ITransactionRepository
 	}
 
 	/// <summary>
-	/// Maps a DataReader to a Transaction object
+	/// Maps a data reader row to a <see cref="Transaction"/> object.
 	/// </summary>
+	/// <param name="reader">The data reader.</param>
+	/// <returns>The mapped <see cref="Transaction"/>.</returns>
 	private static Transaction MapTransaction(IDataReader reader)
 	{
 		return new Transaction

@@ -10,17 +10,26 @@ using InvestmentPortfolio.Domain.Interfaces;
 namespace InvestmentPortfolio.Infrastructure.Repositories;
 
 /// <summary>
-/// Repository for portfolios operations
+/// Repository for portfolios operations.
 /// </summary>
 public class PortfolioRepository : IPortfolioRepository
 {
 	private readonly IDbConnectionFactory _connectionFactory;
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="PortfolioRepository"/> class.
+	/// </summary>
+	/// <param name="connectionFactory">The database connection factory.</param>
 	public PortfolioRepository(IDbConnectionFactory connectionFactory)
 	{
 		_connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
 	}
 
+	/// <summary>
+	/// Gets a portfolio by its unique identifier.
+	/// </summary>
+	/// <param name="portfolioId">The portfolio ID.</param>
+	/// <returns>The portfolio if found; otherwise, null.</returns>
 	public async Task<Portfolio?> GetByIdAsync(int portfolioId)
 	{
 		await using var connection = _connectionFactory.CreateConnection();
@@ -45,6 +54,11 @@ public class PortfolioRepository : IPortfolioRepository
 		return null;
 	}
 
+	/// <summary>
+	/// Gets all portfolios belonging to a specific user.
+	/// </summary>
+	/// <param name="userId">The user ID.</param>
+	/// <returns>A collection of portfolios.</returns>
 	public async Task<IEnumerable<Portfolio>> GetByUserIdAsync(int userId)
 	{
 		var portfolios = new List<Portfolio>();
@@ -72,6 +86,11 @@ public class PortfolioRepository : IPortfolioRepository
 		return portfolios;
 	}
 
+	/// <summary>
+	/// Creates a new portfolio in the database.
+	/// </summary>
+	/// <param name="portfolio">The portfolio to create.</param>
+	/// <returns>The ID of the created portfolio.</returns>
 	public async Task<int> CreateAsync(Portfolio portfolio)
 	{
 		await using var connection = _connectionFactory.CreateConnection();
@@ -94,6 +113,11 @@ public class PortfolioRepository : IPortfolioRepository
 		return Convert.ToInt32(portfolioId);
 	}
 
+	/// <summary>
+	/// Updates an existing portfolio.
+	/// </summary>
+	/// <param name="portfolio">The portfolio to update.</param>
+	/// <returns>True if update succeeded; otherwise, false.</returns>
 	public async Task<bool> UpdateAsync(Portfolio portfolio)
 	{
 		await using var connection = _connectionFactory.CreateConnection();
@@ -117,6 +141,11 @@ public class PortfolioRepository : IPortfolioRepository
 		return rowsAffected > 0;
 	}
 
+	/// <summary>
+	/// Deletes a portfolio by its ID.
+	/// </summary>
+	/// <param name="portfolioId">The portfolio ID.</param>
+	/// <returns>True if deletion succeeded; otherwise, false.</returns>
 	public async Task<bool> DeleteAsync(int portfolioId)
 	{
 		await using var connection = _connectionFactory.CreateConnection();
@@ -134,6 +163,12 @@ public class PortfolioRepository : IPortfolioRepository
 		return rowsAffected > 0;
 	}
 
+	/// <summary>
+	/// Checks if a portfolio belongs to a specific user.
+	/// </summary>
+	/// <param name="portfolioId">The portfolio ID.</param>
+	/// <param name="userId">The user ID.</param>
+	/// <returns>True if the portfolio belongs to the user; otherwise, false.</returns>
 	public async Task<bool> BelongsToUserAsync(int portfolioId, int userId)
 	{
 		await using var connection = _connectionFactory.CreateConnection();
@@ -154,8 +189,10 @@ public class PortfolioRepository : IPortfolioRepository
 	}
 
 	/// <summary>
-	/// Maps a DataReader to a Portfolio object
+	/// Maps a data reader row to a <see cref="Portfolio"/> object.
 	/// </summary>
+	/// <param name="reader">The data reader.</param>
+	/// <returns>The mapped <see cref="Portfolio"/>.</returns>
 	private static Portfolio MapPortfolio(IDataReader reader)
 	{
 		return new Portfolio

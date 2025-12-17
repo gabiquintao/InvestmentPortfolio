@@ -7,20 +7,30 @@ using Microsoft.Data.SqlClient;
 using InvestmentPortfolio.Domain.Entities;
 using InvestmentPortfolio.Domain.Enums;
 using InvestmentPortfolio.Domain.Interfaces;
+
 namespace InvestmentPortfolio.Infrastructure.Repositories;
 
 /// <summary>
-/// Repository for alerts operations
+/// Repository for alerts operations.
 /// </summary>
 public class AlertRepository : IAlertRepository
 {
 	private readonly IDbConnectionFactory _connectionFactory;
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="AlertRepository"/> class.
+	/// </summary>
+	/// <param name="connectionFactory">The database connection factory.</param>
 	public AlertRepository(IDbConnectionFactory connectionFactory)
 	{
 		_connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
 	}
 
+	/// <summary>
+	/// Gets an alert by its unique identifier.
+	/// </summary>
+	/// <param name="alertId">The alert ID.</param>
+	/// <returns>The alert if found; otherwise, null.</returns>
 	public async Task<Alert?> GetByIdAsync(int alertId)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -46,6 +56,11 @@ public class AlertRepository : IAlertRepository
 		return null;
 	}
 
+	/// <summary>
+	/// Gets all alerts for a specific user.
+	/// </summary>
+	/// <param name="userId">The user ID.</param>
+	/// <returns>A collection of alerts for the user.</returns>
 	public async Task<IEnumerable<Alert>> GetByUserIdAsync(int userId)
 	{
 		var alerts = new List<Alert>();
@@ -74,6 +89,10 @@ public class AlertRepository : IAlertRepository
 		return alerts;
 	}
 
+	/// <summary>
+	/// Gets all active alerts.
+	/// </summary>
+	/// <returns>A collection of active alerts.</returns>
 	public async Task<IEnumerable<Alert>> GetActiveAlertsAsync()
 	{
 		var alerts = new List<Alert>();
@@ -100,6 +119,11 @@ public class AlertRepository : IAlertRepository
 		return alerts;
 	}
 
+	/// <summary>
+	/// Gets all active alerts for a specific asset symbol.
+	/// </summary>
+	/// <param name="symbol">The asset symbol.</param>
+	/// <returns>A collection of active alerts for the symbol.</returns>
 	public async Task<IEnumerable<Alert>> GetActiveAlertsBySymbolAsync(string symbol)
 	{
 		var alerts = new List<Alert>();
@@ -128,6 +152,11 @@ public class AlertRepository : IAlertRepository
 		return alerts;
 	}
 
+	/// <summary>
+	/// Creates a new alert in the database.
+	/// </summary>
+	/// <param name="alert">The alert to create.</param>
+	/// <returns>The ID of the created alert.</returns>
 	public async Task<int> CreateAsync(Alert alert)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -153,6 +182,11 @@ public class AlertRepository : IAlertRepository
 		return Convert.ToInt32(alertId);
 	}
 
+	/// <summary>
+	/// Updates an existing alert.
+	/// </summary>
+	/// <param name="alert">The alert to update.</param>
+	/// <returns>True if update succeeded; otherwise, false.</returns>
 	public async Task<bool> UpdateAsync(Alert alert)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -174,6 +208,11 @@ public class AlertRepository : IAlertRepository
 		return rowsAffected > 0;
 	}
 
+	/// <summary>
+	/// Deletes an alert by its ID.
+	/// </summary>
+	/// <param name="alertId">The alert ID.</param>
+	/// <returns>True if deletion succeeded; otherwise, false.</returns>
 	public async Task<bool> DeleteAsync(int alertId)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -191,6 +230,11 @@ public class AlertRepository : IAlertRepository
 		return rowsAffected > 0;
 	}
 
+	/// <summary>
+	/// Marks an alert as triggered, setting IsActive to false and TriggeredAt to now.
+	/// </summary>
+	/// <param name="alertId">The alert ID.</param>
+	/// <returns>True if update succeeded; otherwise, false.</returns>
 	public async Task<bool> MarkAsTriggeredAsync(int alertId)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -212,8 +256,10 @@ public class AlertRepository : IAlertRepository
 	}
 
 	/// <summary>
-	/// Maps a DataReader to an Alert object
+	/// Maps a data reader row to an <see cref="Alert"/> object.
 	/// </summary>
+	/// <param name="reader">The data reader.</param>
+	/// <returns>The mapped <see cref="Alert"/>.</returns>
 	private static Alert MapAlert(IDataReader reader)
 	{
 		return new Alert

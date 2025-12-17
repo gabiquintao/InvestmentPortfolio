@@ -10,17 +10,26 @@ using InvestmentPortfolio.Domain.Interfaces;
 namespace InvestmentPortfolio.Infrastructure.Repositories;
 
 /// <summary>
-/// Repository for user operations
+/// Repository for user operations.
 /// </summary>
 public class UserRepository : IUserRepository
 {
 	private readonly IDbConnectionFactory _connectionFactory;
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="UserRepository"/> class.
+	/// </summary>
+	/// <param name="connectionFactory">The database connection factory.</param>
 	public UserRepository(IDbConnectionFactory connectionFactory)
 	{
 		_connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
 	}
 
+	/// <summary>
+	/// Gets a user by their unique identifier.
+	/// </summary>
+	/// <param name="userId">The user ID.</param>
+	/// <returns>The user if found; otherwise, null.</returns>
 	public async Task<User?> GetByIdAsync(int userId)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -45,6 +54,11 @@ public class UserRepository : IUserRepository
 		return null;
 	}
 
+	/// <summary>
+	/// Gets a user by their email address.
+	/// </summary>
+	/// <param name="email">The user's email.</param>
+	/// <returns>The user if found; otherwise, null.</returns>
 	public async Task<User?> GetByEmailAsync(string email)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -69,6 +83,11 @@ public class UserRepository : IUserRepository
 		return null;
 	}
 
+	/// <summary>
+	/// Creates a new user in the database.
+	/// </summary>
+	/// <param name="user">The user to create.</param>
+	/// <returns>The ID of the created user.</returns>
 	public async Task<int> CreateAsync(User user)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -90,6 +109,11 @@ public class UserRepository : IUserRepository
 		return Convert.ToInt32(userId);
 	}
 
+	/// <summary>
+	/// Updates an existing user.
+	/// </summary>
+	/// <param name="user">The user to update.</param>
+	/// <returns>True if update succeeded; otherwise, false.</returns>
 	public async Task<bool> UpdateAsync(User user)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -111,6 +135,11 @@ public class UserRepository : IUserRepository
 		return rowsAffected > 0;
 	}
 
+	/// <summary>
+	/// Checks whether a user with the given email exists.
+	/// </summary>
+	/// <param name="email">The email to check.</param>
+	/// <returns>True if email exists; otherwise, false.</returns>
 	public async Task<bool> EmailExistsAsync(string email)
 	{
 		using var connection = _connectionFactory.CreateConnection();
@@ -130,8 +159,10 @@ public class UserRepository : IUserRepository
 	}
 
 	/// <summary>
-	/// Maps a DataReader to a User object
+	/// Maps a data reader row to a <see cref="User"/> object.
 	/// </summary>
+	/// <param name="reader">The data reader.</param>
+	/// <returns>The mapped <see cref="User"/>.</returns>
 	private static User MapUser(IDataReader reader)
 	{
 		return new User
