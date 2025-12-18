@@ -1,5 +1,6 @@
 ﻿using System.Data.Common;
 using InvestmentPortfolio.Domain.Interfaces;
+using InvestmentPortfolio.Infrastructure.Data;
 
 namespace InvestmentPortfolio.Infrastructure.UnitOfWork;
 

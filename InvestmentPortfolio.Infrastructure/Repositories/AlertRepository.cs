@@ -7,6 +7,7 @@ using Microsoft.Data.SqlClient;
 using InvestmentPortfolio.Domain.Entities;
 using InvestmentPortfolio.Domain.Enums;
 using InvestmentPortfolio.Domain.Interfaces;
+using InvestmentPortfolio.Infrastructure.Data;
 
 namespace InvestmentPortfolio.Infrastructure.Repositories;
 

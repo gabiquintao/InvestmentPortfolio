@@ -5,6 +5,8 @@
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
 
+namespace InvestmentPortfolio.Infrastructure.Data;
+
 /// <summary>
 /// Factory interface for creating database connections.
 /// </summary>
