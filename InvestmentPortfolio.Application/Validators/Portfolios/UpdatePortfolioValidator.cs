@@ -1,5 +1,7 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/Validators/Portfolios/UpdatePortfolioValidator.cs
+// Purpose: Validates the properties of an UpdatePortfolioDto before updating an existing portfolio,
+//          ensuring name, description, and currency follow business rules.
 // ============================================================================
 
 using FluentValidation;
@@ -8,7 +10,8 @@ using InvestmentPortfolio.Application.DTOs.Portfolios;
 namespace InvestmentPortfolio.Application.Validators.Portfolios;
 
 /// <summary>
-/// Portfolio update validator
+/// Validator for updating portfolios.
+/// Ensures portfolio name, description, and currency are valid.
 /// </summary>
 public class UpdatePortfolioValidator : AbstractValidator<UpdatePortfolioDto>
 {

@@ -1,5 +1,7 @@
-﻿// ============================================================================
+﻿// =========================// ============================================================================
 // File: InvestmentPortfolio.Application/Services/PortfolioService.cs
+// Purpose: Manages user portfolios, including creating, retrieving, updating,
+//          and deleting portfolios.
 // ============================================================================
 
 using AutoMapper;

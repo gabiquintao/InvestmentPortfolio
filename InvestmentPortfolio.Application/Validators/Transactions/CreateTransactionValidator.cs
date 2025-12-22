@@ -1,5 +1,7 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/Validators/Transactions/CreateTransactionValidator.cs
+// Purpose: Validates the properties of a CreateTransactionDto before creating a new transaction,
+//          enforcing rules for portfolio, asset, transaction type, quantity, price, fees, date, and notes.
 // ============================================================================
 
 using FluentValidation;
@@ -8,7 +10,8 @@ using InvestmentPortfolio.Application.DTOs.Transactions;
 namespace InvestmentPortfolio.Application.Validators.Transactions;
 
 /// <summary>
-/// Transaction creation validator
+/// Validator for creating transactions.
+/// Ensures portfolio ID, asset ID, type, quantity, price per unit, fees, transaction date, and notes are valid.
 /// </summary>
 public class CreateTransactionValidator : AbstractValidator<CreateTransactionDto>
 {

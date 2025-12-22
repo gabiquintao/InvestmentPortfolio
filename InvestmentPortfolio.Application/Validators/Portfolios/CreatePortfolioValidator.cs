@@ -1,5 +1,7 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/Validators/Portfolios/CreatePortfolioValidator.cs
+// Purpose: Validates the properties of a CreatePortfolioDto before creating a new portfolio,
+//          ensuring name, description, and currency follow business rules.
 // ============================================================================
 
 using FluentValidation;
@@ -8,7 +10,8 @@ using InvestmentPortfolio.Application.DTOs.Portfolios;
 namespace InvestmentPortfolio.Application.Validators.Portfolios;
 
 /// <summary>
-/// Portfolio creation validator
+/// Validator for creating portfolios.
+/// Ensures portfolio name, description, and currency are valid.
 /// </summary>
 public class CreatePortfolioValidator : AbstractValidator<CreatePortfolioDto>
 {

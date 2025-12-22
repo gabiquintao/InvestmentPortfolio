@@ -1,36 +1,45 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/DTOs/Common/ApiResponse.cs
+// Purpose: Standardized API response wrapper for all endpoints.
 // ============================================================================
+
+using System.Runtime.Serialization;
 
 namespace InvestmentPortfolio.Application.DTOs.Common;
 
 /// <summary>
-/// API standard response
+/// Standard API response wrapper.
 /// </summary>
+[DataContract]
 public class ApiResponse<T>
 {
 	/// <summary>
-	/// Indicates whether the operation was successful
+	/// Indicates whether the operation was successful.
 	/// </summary>
+	[DataMember]
 	public bool Success { get; set; }
 
 	/// <summary>
-	/// Message of the response
+	/// Message describing the response.
 	/// </summary>
+	[DataMember]
 	public string Message { get; set; } = string.Empty;
 
 	/// <summary>
-	/// Data of the response
+	/// Data returned by the API call, if any.
 	/// </summary>
+	[DataMember]
 	public T? Data { get; set; }
 
 	/// <summary>
-	/// List of errors (if they exist)
+	/// List of errors encountered, if any.
 	/// </summary>
+	[DataMember]
 	public List<string> Errors { get; set; } = new();
 
 	/// <summary>
-	/// Timestamp of the response
+	/// Timestamp when the response was generated (UTC).
 	/// </summary>
+	[DataMember]
 	public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 }

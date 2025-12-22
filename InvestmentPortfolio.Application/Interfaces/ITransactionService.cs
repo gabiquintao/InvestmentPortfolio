@@ -1,5 +1,6 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/Interfaces/ITransactionService.cs
+// Purpose: Provides operations for managing transactions within user portfolios.
 // ============================================================================
 
 using InvestmentPortfolio.Application.DTOs.Transactions;

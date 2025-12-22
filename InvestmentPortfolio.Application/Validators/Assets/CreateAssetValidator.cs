@@ -1,5 +1,7 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/Validators/Assets/CreateAssetValidator.cs
+// Purpose: Validates the properties of a CreateAssetDto before adding a new asset to a portfolio,
+//          ensuring symbol, type, quantity, average purchase price, and purchase date are valid.
 // ============================================================================
 
 using FluentValidation;
@@ -8,7 +10,8 @@ using InvestmentPortfolio.Application.DTOs.Assets;
 namespace InvestmentPortfolio.Application.Validators.Assets;
 
 /// <summary>
-/// Asset creation validator
+/// Validator for creating assets.
+/// Checks symbol format, asset type, quantity, average purchase price, and purchase date.
 /// </summary>
 public class CreateAssetValidator : AbstractValidator<CreateAssetDto>
 {

@@ -1,5 +1,7 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/Services/JwtService.cs
+// Purpose: Generates and validates JWT tokens for user authentication and
+//          authorization within the system.
 // ============================================================================
 
 using System.IdentityModel.Tokens.Jwt;

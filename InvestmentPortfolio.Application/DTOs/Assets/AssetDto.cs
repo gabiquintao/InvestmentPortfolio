@@ -1,51 +1,63 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/DTOs/Assets/AssetDto.cs
+// Purpose: DTO representing an asset entity in the system.
 // ============================================================================
+
+using System.Runtime.Serialization;
 
 namespace InvestmentPortfolio.Application.DTOs.Assets;
 
 /// <summary>
-/// DTO for asset
+/// DTO representing an asset within a portfolio.
 /// </summary>
+[DataContract]
 public class AssetDto
 {
 	/// <summary>
-	/// ID of the asset
+	/// Unique identifier of the asset.
 	/// </summary>
+	[DataMember]
 	public int AssetId { get; set; }
 
 	/// <summary>
-	/// ID of the portfolio
+	/// Identifier of the portfolio this asset belongs to.
 	/// </summary>
+	[DataMember]
 	public int PortfolioId { get; set; }
 
 	/// <summary>
-	/// Symbol of the asset
+	/// Symbol of the asset (e.g., stock ticker).
 	/// </summary>
+	[DataMember]
 	public string Symbol { get; set; } = string.Empty;
 
 	/// <summary>
-	/// Type of asset
+	/// Numeric representation of the asset type.
 	/// </summary>
+	[DataMember]
 	public int AssetType { get; set; }
 
 	/// <summary>
-	/// Name of the asset type
+	/// Human-readable name of the asset type.
 	/// </summary>
+	[DataMember]
 	public string AssetTypeName { get; set; } = string.Empty;
 
 	/// <summary>
-	/// Quantity
+	/// Quantity of the asset owned.
 	/// </summary>
+	[DataMember]
 	public decimal Quantity { get; set; }
 
 	/// <summary>
-	/// Average purchase price
+	/// Average price at which the asset was purchased.
 	/// </summary>
+	[DataMember]
 	public decimal AvgPurchasePrice { get; set; }
 
 	/// <summary>
-	/// Date of purchase
+	/// Date when the asset was purchased.
 	/// </summary>
+	[DataMember]
 	public DateTime PurchaseDate { get; set; }
 }

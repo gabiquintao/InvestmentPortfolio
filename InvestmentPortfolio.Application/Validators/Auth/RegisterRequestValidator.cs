@@ -1,5 +1,7 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/Validators/Auth/RegisterRequestValidator.cs
+// Purpose: Validates the properties of a RegisterRequestDto before registering a new user,
+//          enforcing email, password, and full name requirements.
 // ============================================================================
 
 using FluentValidation;
@@ -8,7 +10,8 @@ using InvestmentPortfolio.Application.DTOs.Auth;
 namespace InvestmentPortfolio.Application.Validators.Auth;
 
 /// <summary>
-/// Register request validator
+/// Validator for user registration requests.
+/// Ensures email, password, and full name meet format, length, and complexity requirements.
 /// </summary>
 public class RegisterRequestValidator : AbstractValidator<RegisterRequestDto>
 {

@@ -1,5 +1,8 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/Services/TransactionService.cs
+// Purpose: Handles business logic for managing transactions within user
+//          portfolios, including creating, retrieving, and updating transactions
+//          and updating asset quantities accordingly.
 // ============================================================================
 
 using AutoMapper;

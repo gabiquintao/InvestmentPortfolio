@@ -1,21 +1,27 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/DTOs/Alerts/UpdateAlertDto.cs
+// Purpose: DTO for updating an existing alert in the system.
 // ============================================================================
+
+using System.Runtime.Serialization;
 
 namespace InvestmentPortfolio.Application.DTOs.Alerts;
 
 /// <summary>
-/// DTO for alert update
+/// DTO used to update an existing alert.
 /// </summary>
+[DataContract]
 public class UpdateAlertDto
 {
 	/// <summary>
-	/// Target price
+	/// Updated target price for the alert.
 	/// </summary>
+	[DataMember]
 	public decimal TargetPrice { get; set; }
 
 	/// <summary>
-	/// Is active
+	/// Updated active status of the alert.
 	/// </summary>
+	[DataMember]
 	public bool IsActive { get; set; }
 }

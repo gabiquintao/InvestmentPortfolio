@@ -1,5 +1,6 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/Interfaces/IAssetService.cs
+// Purpose: Provides operations for managing assets within user portfolios.
 // ============================================================================
 
 using InvestmentPortfolio.Application.DTOs.Assets;

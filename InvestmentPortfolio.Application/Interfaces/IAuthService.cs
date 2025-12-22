@@ -1,5 +1,6 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/Interfaces/IAuthService.cs
+// Purpose: Handles user authentication, registration, and profile retrieval.
 // ============================================================================
 
 using InvestmentPortfolio.Application.DTOs.Auth;

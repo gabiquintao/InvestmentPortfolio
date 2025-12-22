@@ -1,5 +1,7 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/Services/AuthService.cs
+// Purpose: Provides authentication and user management functionality, including
+//          registration, login, and profile retrieval.
 // ============================================================================
 
 using AutoMapper;

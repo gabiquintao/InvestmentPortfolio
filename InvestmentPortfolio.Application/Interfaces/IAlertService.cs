@@ -1,9 +1,9 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/Interfaces/IAlertService.cs
+// Purpose: Provides operations for managing user alerts in the investment portfolio application.
 // ============================================================================
 
 using InvestmentPortfolio.Application.DTOs.Alerts;
-using InvestmentPortfolio.Domain.Entities;
 
 namespace InvestmentPortfolio.Application.Interfaces;
 

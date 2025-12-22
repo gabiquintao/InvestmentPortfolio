@@ -1,5 +1,6 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/Interfaces/IJwtService.cs
+// Purpose: Provides JWT token generation and validation services for users.
 // ============================================================================
 
 using InvestmentPortfolio.Domain.Entities;

@@ -1,5 +1,7 @@
 ﻿// ============================================================================
-// File: InvestmentPortfolio.Application/Services/Asset.cs
+// File: InvestmentPortfolio.Application/Services/AssetService.cs
+// Purpose: Handles business operations related to assets in user portfolios,
+//          including creation, retrieval, updating, and deletion of assets.
 // ============================================================================
 
 using AutoMapper;

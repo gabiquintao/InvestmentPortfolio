@@ -1,5 +1,7 @@
 ﻿// ============================================================================
-// File: InvestmentPortfolio.Application/Services/Alert.cs
+// File: InvestmentPortfolio.Application/Services/AlertService.cs
+// Purpose: Provides business logic for managing user alerts, including creation,
+//          retrieval, updating, and deletion of alerts.
 // ============================================================================
 
 using AutoMapper;
