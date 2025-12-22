@@ -3,4 +3,5 @@
   <Project Path="InvestmentPortfolio.Contracts/InvestmentPortfolio.Contracts.csproj" Id="b3f0c02b-bac0-487e-ab26-5743ebd58af6" />
   <Project Path="InvestmentPortfolio.Domain/InvestmentPortfolio.Domain.csproj" />
   <Project Path="InvestmentPortfolio.Infrastructure/InvestmentPortfolio.Infrastructure.csproj" Id="f90cae84-b485-4dff-81d2-8f1db5a2b4c2" />
+  <Project Path="InvestmentPortfolio.Wcf/InvestmentPortfolio.Wcf.csproj" Id="12345e07-6bfc-4c23-99c2-c7a7b0e12673" />
 </Solution>
