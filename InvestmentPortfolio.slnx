@@ -1,7 +1,6 @@
 <Solution>
-  <Project Path="InvestmentPortfolio.API/InvestmentPortfolio.API.csproj" Id="0d9dfa43-02df-4c2a-a0c5-ebc77ac916e3" />
   <Project Path="InvestmentPortfolio.Application/InvestmentPortfolio.Application.csproj" Id="4ab93d1a-bdf6-49e7-8317-3dc23eb59d40" />
+  <Project Path="InvestmentPortfolio.Contracts/InvestmentPortfolio.Contracts.csproj" Id="b3f0c02b-bac0-487e-ab26-5743ebd58af6" />
   <Project Path="InvestmentPortfolio.Domain/InvestmentPortfolio.Domain.csproj" />
   <Project Path="InvestmentPortfolio.Infrastructure/InvestmentPortfolio.Infrastructure.csproj" Id="f90cae84-b485-4dff-81d2-8f1db5a2b4c2" />
-  <Project Path="InvestmentPortfolio.WCF/InvestmentPortfolio.WCF.csproj" Id="2a459760-b3ff-4ad6-bbda-5c314cc0e72c" />
 </Solution>
