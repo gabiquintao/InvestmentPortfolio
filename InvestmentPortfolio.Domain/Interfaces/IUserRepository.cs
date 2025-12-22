@@ -1,5 +1,6 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Domain/Interfaces/IUserRepository.cs
+// Purpose: Interface for user repository operations, including CRUD and email validation.
 // ============================================================================
 
 using InvestmentPortfolio.Domain.Entities;
@@ -7,32 +8,29 @@ using InvestmentPortfolio.Domain.Entities;
 namespace InvestmentPortfolio.Domain.Interfaces;
 
 /// <summary>
-/// Interface for user repository operations
+/// Provides methods for accessing and managing users in the data store.
 /// </summary>
 public interface IUserRepository
 {
 	/// <summary>
-	/// Gets a user by ID
+	/// Gets a user by their unique identifier.
 	/// </summary>
 	Task<User?> GetByIdAsync(int userId);
 
 	/// <summary>
-	/// Gets an user by email
+	/// Gets a user by their email address.
 	/// </summary>
 	Task<User?> GetByEmailAsync(string email);
 
 	/// <summary>
-	/// Creates a new <see cref="User"/>
+	/// Creates a new user in the data store.
 	/// </summary>
 	Task<int> CreateAsync(User user);
 
 	/// <summary>
-	/// Updates an existing <see cref="User"/>
+	/// Updates an existing user in the data store.
 	/// </summary>
 	Task<bool> UpdateAsync(User user);
 
 	/// <summary>
-	/// Checks whether an email already exists
-	/// </summary>
-	Task<bool> EmailExistsAsync(string email);
-}
+	/// Checks whether an email address is already registered.

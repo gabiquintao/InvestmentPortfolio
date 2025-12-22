@@ -1,4 +1,10 @@
-﻿using System.Data.Common;
+﻿// ============================================================================
+// File: InvestmentPortfolio.Infrastructure/UnitOfWork/UnitOfWork.cs
+// Purpose: Implementation of the Unit of Work pattern to manage multiple
+//          repositories and database transactions in a single scope.
+// ============================================================================
+
+using System.Data.Common;
 using InvestmentPortfolio.Domain.Interfaces;
 using InvestmentPortfolio.Infrastructure.Data;
 

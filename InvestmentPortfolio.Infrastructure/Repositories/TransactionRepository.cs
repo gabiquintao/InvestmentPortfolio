@@ -1,5 +1,6 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Infrastructure/Repositories/TransactionRepository.cs
+// Purpose: Repository implementation for managing transactions in the database.
 // ============================================================================
 
 using System.Data;

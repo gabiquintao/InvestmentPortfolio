@@ -1,5 +1,6 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Infrastructure/Repositories/UserRepository.cs
+// Purpose: Repository implementation for managing users in the database.
 // ============================================================================
 
 using System.Data;

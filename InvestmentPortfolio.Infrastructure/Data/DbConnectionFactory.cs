@@ -1,5 +1,6 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Infrastructure/Data/DbConnectionFactory.cs
+// Purpose: Provides a factory for creating database connections.
 // ============================================================================
 
 using System.Data.Common;

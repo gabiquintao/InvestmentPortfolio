@@ -1,5 +1,6 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Infrastructure/Repositories/AlertRepository.cs
+// Purpose: Repository implementation for managing alerts in the database.
 // ============================================================================
 
 using System.Data;

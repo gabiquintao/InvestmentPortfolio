@@ -1,5 +1,6 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Infrastructure/Repositories/PortfolioRepository.cs
+// Purpose: Repository implementation for managing portfolios in the database.
 // ============================================================================
 
 using System.Data;

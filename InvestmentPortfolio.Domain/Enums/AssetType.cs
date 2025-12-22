@@ -1,11 +1,12 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Domain/Enums/AssetType.cs
+// Purpose: Defines the AssetType enum representing supported types of assets.
 // ============================================================================
 
 namespace InvestmentPortfolio.Domain.Enums;
 
 /// <summary>
-/// Type of supported assets
+/// Types of assets supported by the system.
 /// </summary>
 public enum AssetType
 {
