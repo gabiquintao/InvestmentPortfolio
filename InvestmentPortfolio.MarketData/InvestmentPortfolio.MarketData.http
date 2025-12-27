@@ -1,0 +1,25 @@
+@InvestmentPortfolio.MarketData_HostAddress = http://localhost:5088
+
+### Obter preço de um ativo (Bitcoin)
+GET {{InvestmentPortfolio.MarketData_HostAddress}}/api/market/price/BTC-USD
+Accept: application/json
+
+###
+
+### Obter preço de uma ação (Apple)
+GET {{InvestmentPortfolio.MarketData_HostAddress}}/api/market/price/AAPL
+Accept: application/json
+
+###
+
+### Pesquisar símbolos
+GET {{InvestmentPortfolio.MarketData_HostAddress}}/api/market/search?query=bitcoin
+Accept: application/json
+
+###
+
+### Obter ativos em tendência
+GET {{InvestmentPortfolio.MarketData_HostAddress}}/api/market/trending
+Accept: application/json
+
+###

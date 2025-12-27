@@ -1,7 +1,9 @@
 <Solution>
+  <Project Path="InvestmentPortfolio.Api/InvestmentPortfolio.Api.csproj" Id="4cf739e5-3347-4794-936f-7ad2734a0084" />
   <Project Path="InvestmentPortfolio.Application/InvestmentPortfolio.Application.csproj" Id="4ab93d1a-bdf6-49e7-8317-3dc23eb59d40" />
   <Project Path="InvestmentPortfolio.Contracts/InvestmentPortfolio.Contracts.csproj" Id="b3f0c02b-bac0-487e-ab26-5743ebd58af6" />
   <Project Path="InvestmentPortfolio.Domain/InvestmentPortfolio.Domain.csproj" />
   <Project Path="InvestmentPortfolio.Infrastructure/InvestmentPortfolio.Infrastructure.csproj" Id="f90cae84-b485-4dff-81d2-8f1db5a2b4c2" />
+  <Project Path="InvestmentPortfolio.MarketData/InvestmentPortfolio.MarketData.csproj" Id="e875bb36-8642-4f0a-99fe-f092a206ca11" />
   <Project Path="InvestmentPortfolio.Wcf/InvestmentPortfolio.Wcf.csproj" Id="12345e07-6bfc-4c23-99c2-c7a7b0e12673" />
 </Solution>

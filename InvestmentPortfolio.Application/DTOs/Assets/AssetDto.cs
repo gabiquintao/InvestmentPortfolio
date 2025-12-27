@@ -1,6 +1,7 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/DTOs/Assets/AssetDto.cs
-// Purpose: DTO representing an asset entity in the system.
+// Purpose: DTO representing an asset entity in the system, including runtime
+//          properties for current value and gain/loss calculation.
 // ============================================================================
 
 using System.Runtime.Serialization;
@@ -60,4 +61,16 @@ public class AssetDto
 	/// </summary>
 	[DataMember]
 	public DateTime PurchaseDate { get; set; }
+
+	/// <summary>
+	/// Current market value of the asset. This property is calculated or
+	/// populated at runtime via market data services and is not stored in the database.
+	/// </summary>
+	[DataMember]
+	public decimal CurrentValue { get; set; }
+
+	/// <summary>
+	/// Gain or loss of the asset calculate.
+	/// </summary>
+	public decimal GainLoss { get; set; }
 }

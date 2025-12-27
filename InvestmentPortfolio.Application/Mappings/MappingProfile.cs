@@ -1,10 +1,6 @@
 ﻿// ============================================================================
 // File: InvestmentPortfolio.Application/Mappings/MappingProfile.cs
-// Purpose: Defines AutoMapper mappings between domain entities and DTOs for the
-//          InvestmentPortfolio application, including helpers for mapping enums
-//          to human-readable names.
 // ============================================================================
-
 using AutoMapper;
 using InvestmentPortfolio.Application.DTOs.Alerts;
 using InvestmentPortfolio.Application.DTOs.Assets;
@@ -17,18 +13,8 @@ using InvestmentPortfolio.Domain.Enums;
 
 namespace InvestmentPortfolio.Application.Mappings;
 
-/// <summary>
-/// AutoMapper profile responsible for defining mappings between domain entities
-/// and Data Transfer Objects (DTOs). This includes mappings for Users, Portfolios,
-/// Assets, Transactions, and Alerts. Enum values are mapped to human-readable names
-/// for DTOs where applicable.
-/// </summary>
 public class MappingProfile : Profile
 {
-	/// <summary>
-	/// Initializes a new instance of the <see cref="MappingProfile"/> class
-	/// and defines all mappings for the application.
-	/// </summary>
 	public MappingProfile()
 	{
 		// -------------------------
@@ -65,7 +51,15 @@ public class MappingProfile : Profile
 		// Asset mappings
 		// -------------------------
 		CreateMap<Asset, AssetDto>()
-			.ForMember(dest => dest.AssetTypeName, opt => opt.MapFrom(src => GetAssetTypeName(src.AssetType)));
+			.ForMember(dest => dest.AssetTypeName, opt => opt.MapFrom(src => GetAssetTypeName(src.AssetType)))
+			.ForMember(dest => dest.CurrentValue, opt => opt.MapFrom(src => src.Quantity * src.AvgPurchasePrice))
+			.AfterMap((src, dest) =>
+			{
+				// ✅ ADICIONADO: Calcula GainLoss após o mapping
+				// Inicialmente CurrentValue = Quantity * AvgPurchasePrice (custo base)
+				// GainLoss será 0 até ser atualizado com dados de mercado
+				dest.GainLoss = dest.CurrentValue - (dest.Quantity * dest.AvgPurchasePrice);
+			});
 
 		CreateMap<CreateAssetDto, Asset>()
 			.ForMember(dest => dest.AssetId, opt => opt.Ignore())
@@ -124,9 +118,6 @@ public class MappingProfile : Profile
 
 	#region Helper Methods
 
-	/// <summary>
-	/// Converts an <see cref="AssetType"/> enum value to a human-readable string.
-	/// </summary>
 	private static string GetAssetTypeName(AssetType assetType)
 	{
 		return assetType switch
@@ -138,9 +129,6 @@ public class MappingProfile : Profile
 		};
 	}
 
-	/// <summary>
-	/// Converts a <see cref="TransactionType"/> enum value to a human-readable string.
-	/// </summary>
 	private static string GetTransactionTypeName(TransactionType transactionType)
 	{
 		return transactionType switch
@@ -151,9 +139,6 @@ public class MappingProfile : Profile
 		};
 	}
 
-	/// <summary>
-	/// Converts an <see cref="AlertCondition"/> enum value to a human-readable string.
-	/// </summary>
 	private static string GetAlertConditionName(AlertCondition condition)
 	{
 		return condition switch

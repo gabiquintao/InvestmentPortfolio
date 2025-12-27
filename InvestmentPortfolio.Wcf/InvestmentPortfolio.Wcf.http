@@ -1,6 +1,52 @@
-@InvestmentPortfolio.Wcf_HostAddress = http://localhost:5271
+@InvestmentPortfolio.Wcf_HostAddress = http://localhost:5003
 
-GET {{InvestmentPortfolio.Wcf_HostAddress}}/weatherforecast/
+### Auth Service - Register
+POST {{InvestmentPortfolio.Wcf_HostAddress}}/AuthService.svc
+Content-Type: application/json
+
+{
+  "Email": "test@example.com",
+  "Password": "Password123!",
+  "FullName": "Test User"
+}
+
+### Auth Service - Login
+POST {{InvestmentPortfolio.Wcf_HostAddress}}/AuthService.svc
+Content-Type: application/json
+
+{
+  "Email": "test@example.com",
+  "Password": "Password123!"
+}
+
+### Portfolio Service - Get User Portfolios
+GET {{InvestmentPortfolio.Wcf_HostAddress}}/PortfolioService.svc
 Accept: application/json
 
-###
+### Portfolio Service - Get Portfolio By ID
+GET {{InvestmentPortfolio.Wcf_HostAddress}}/PortfolioService.svc?id=1
+Accept: application/json
+
+### Asset Service - Get Portfolio Assets
+GET {{InvestmentPortfolio.Wcf_HostAddress}}/AssetService.svc?portfolioId=1
+Accept: application/json
+
+### Asset Service - Get Asset By ID
+GET {{InvestmentPortfolio.Wcf_HostAddress}}/AssetService.svc?id=1
+Accept: application/json
+
+### Transaction Service - Get User Transactions
+GET {{InvestmentPortfolio.Wcf_HostAddress}}/TransactionService.svc?userId=1
+Accept: application/json
+
+### Transaction Service - Get Portfolio Transactions
+GET {{InvestmentPortfolio.Wcf_HostAddress}}/TransactionService.svc?portfolioId=1
+Accept: application/json
+
+### Alert Service - Get User Alerts
+GET {{InvestmentPortfolio.Wcf_HostAddress}}/AlertService.svc?userId=1
+Accept: application/json
+
+### Alert Service - Get Active Alerts
+GET {{InvestmentPortfolio.Wcf_HostAddress}}/AlertService.svc/active?userId=1
+Accept: application/json

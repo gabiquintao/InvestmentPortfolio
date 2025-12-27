@@ -34,3 +34,5 @@ public interface IUserRepository
 
 	/// <summary>
 	/// Checks whether an email address is already registered.
+	Task<bool> EmailExistsAsync(string email);
+}
