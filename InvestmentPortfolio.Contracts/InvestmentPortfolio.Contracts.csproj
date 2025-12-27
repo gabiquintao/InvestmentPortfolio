@@ -14,4 +14,16 @@
     <ProjectReference Include="..\InvestmentPortfolio.Application\InvestmentPortfolio.Application.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<!-- Impede que os arquivos appsettings sejam copiados para a pasta de publicação -->
+		<None Update="appsettings.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</None>
+		<None Update="appsettings.Production.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</None>
+	</ItemGroup>
+
 </Project>
