@@ -2,8 +2,8 @@
 // File: InvestmentPortfolio.Api/WcfClients/WcfClientBase.cs
 // Purpose: Abstract base class for all WCF clients.
 //          Manages channel creation, logging, and safe disposal of resources.
+//          Supports both HTTP and HTTPS endpoints.
 // ============================================================================
-
 using System.ServiceModel;
 
 namespace InvestmentPortfolio.Api.WcfClients
@@ -26,12 +26,26 @@ namespace InvestmentPortfolio.Api.WcfClients
 			var binding = new BasicHttpBinding
 			{
 				MaxReceivedMessageSize = int.MaxValue,
-				MaxBufferSize = int.MaxValue,
-				Security = new BasicHttpSecurity
+				MaxBufferSize = int.MaxValue
+			};
+
+			// ✅ Detecta automaticamente HTTP vs HTTPS
+			if (endpointAddress.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+			{
+				_logger.LogInformation("Using HTTPS transport security for: {Endpoint}", endpointAddress);
+				binding.Security = new BasicHttpSecurity
+				{
+					Mode = BasicHttpSecurityMode.Transport
+				};
+			}
+			else
+			{
+				_logger.LogInformation("Using HTTP (no security) for: {Endpoint}", endpointAddress);
+				binding.Security = new BasicHttpSecurity
 				{
 					Mode = BasicHttpSecurityMode.None
-				}
-			};
+				};
+			}
 
 			_channelFactory = new ChannelFactory<TChannel>(
 				binding,
@@ -51,7 +65,6 @@ namespace InvestmentPortfolio.Api.WcfClients
 					_channel = _channelFactory.CreateChannel();
 					((ICommunicationObject)_channel).Open();
 				}
-
 				return _channel;
 			}
 		}

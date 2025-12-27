@@ -1,11 +1,13 @@
 // ============================================================================
 // File: InvestmentPortfolio.Api/Program.cs
 // Purpose: Configures and starts the Investment Portfolio API application.
-//          Sets up services, authentication, WCF clients, CORS, OpenAPI, logging,
+//          Sets up services, authentication, CORS, OpenAPI, logging,
 //          middleware pipeline, and SQL Azure DB connection using Managed Identity.
 // ============================================================================
 using FluentValidation;
 using InvestmentPortfolio.Api.WcfClients;
+using InvestmentPortfolio.Application.Interfaces;
+using InvestmentPortfolio.Application.Services;
 using InvestmentPortfolio.Application.Validators.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -38,13 +40,13 @@ builder.Services.AddControllers();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
 
 // ============================================================================
-// WCF Clients
+// WCF Clients (now DI wrappers)
 // ============================================================================
+builder.Services.AddScoped<AlertWcfClient>();
 builder.Services.AddScoped<AuthWcfClient>();
 builder.Services.AddScoped<PortfolioWcfClient>();
 builder.Services.AddScoped<AssetWcfClient>();
 builder.Services.AddScoped<TransactionWcfClient>();
-builder.Services.AddScoped<AlertWcfClient>();
 
 // ============================================================================
 // HTTP Clients for External Services
@@ -66,7 +68,6 @@ builder.Services.AddDbContext<DbContext>(options =>
 		throw new InvalidOperationException("DefaultConnection not configured");
 	}
 
-	// Use Managed Identity if Authentication=Active Directory Default is present
 	options.UseSqlServer(connectionString);
 });
 
@@ -156,7 +157,7 @@ builder.Logging.AddDebug();
 // ============================================================================
 // Build Application
 // ============================================================================
-var app = builder.Build();
+WebApplication? app = builder.Build();
 
 // ============================================================================
 // Middleware Pipeline

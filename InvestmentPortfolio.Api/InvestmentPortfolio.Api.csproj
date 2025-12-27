@@ -14,21 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\InvestmentPortfolio.Application\InvestmentPortfolio.Application.csproj" />
     <ProjectReference Include="..\InvestmentPortfolio.Contracts\InvestmentPortfolio.Contracts.csproj" />
-    <ProjectReference Include="..\InvestmentPortfolio.MarketData\InvestmentPortfolio.MarketData.csproj" />
+    <ProjectReference Include="..\InvestmentPortfolio.Infrastructure\InvestmentPortfolio.Infrastructure.csproj" />
     <ProjectReference Include="..\InvestmentPortfolio.Wcf\InvestmentPortfolio.Wcf.csproj" />
   </ItemGroup>
-
-	<ItemGroup>
-		<!-- Impede que os arquivos appsettings sejam copiados para a pasta de publicação -->
-		<None Update="appsettings.json">
-			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
-			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
-		</None>
-		<None Update="appsettings.Production.json">
-			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
-			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
-		</None>
-	</ItemGroup>
 
 </Project>

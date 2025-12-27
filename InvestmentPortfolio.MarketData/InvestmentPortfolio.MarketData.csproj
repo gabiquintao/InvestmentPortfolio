@@ -17,21 +17,4 @@
     <ProjectReference Include="..\InvestmentPortfolio.Domain\InvestmentPortfolio.Domain.csproj" />
   </ItemGroup>
 
-	<ItemGroup>
-		<!-- Impede que os arquivos appsettings sejam copiados para a pasta de publicação -->
-		<None Update="appsettings.json">
-			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
-			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
-		</None>
-		<None Update="appsettings.Production.json">
-			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
-			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Update="appsettings.json" CopyToPublishDirectory="Never" />
-		<Content Update="appsettings.*.json" CopyToPublishDirectory="Never" />
-	</ItemGroup>
-
 </Project>
