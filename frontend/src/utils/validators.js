@@ -1,0 +1,434 @@
+// ============================================================================
+// Validators Utility
+// Helper functions for validation of forms, inputs, and business logic
+// ============================================================================
+import { AssetType, TransactionType, AlertCondition } from "../types";
+// ============================================================================
+// EMAIL VALIDATORS
+// ============================================================================
+/**
+ * Validate email format
+ */
+export const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
+/**
+ * Get email validation error message
+ */
+export const getEmailError = (email) => {
+    if (!email || email.trim() === "") {
+        return "Email is required";
+    }
+    if (!isValidEmail(email)) {
+        return "Please enter a valid email address";
+    }
+    return null;
+};
+// ============================================================================
+// PASSWORD VALIDATORS
+// ============================================================================
+/**
+ * Validate password strength
+ * Requirements: min 8 characters, at least 1 uppercase, 1 lowercase, 1 number
+ */
+export const isValidPassword = (password) => {
+    if (password.length < 8)
+        return false;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    return hasUppercase && hasLowercase && hasNumber;
+};
+/**
+ * Get password validation error message
+ */
+export const getPasswordError = (password) => {
+    if (!password || password.trim() === "") {
+        return "Password is required";
+    }
+    if (password.length < 8) {
+        return "Password must be at least 8 characters long";
+    }
+    if (!/[A-Z]/.test(password)) {
+        return "Password must contain at least one uppercase letter";
+    }
+    if (!/[a-z]/.test(password)) {
+        return "Password must contain at least one lowercase letter";
+    }
+    if (!/[0-9]/.test(password)) {
+        return "Password must contain at least one number";
+    }
+    return null;
+};
+/**
+ * Validate password confirmation
+ */
+export const isPasswordMatch = (password, confirmPassword) => {
+    return password === confirmPassword;
+};
+/**
+ * Get password confirmation error message
+ */
+export const getPasswordConfirmError = (password, confirmPassword) => {
+    if (!confirmPassword || confirmPassword.trim() === "") {
+        return "Please confirm your password";
+    }
+    if (!isPasswordMatch(password, confirmPassword)) {
+        return "Passwords do not match";
+    }
+    return null;
+};
+/**
+ * Calculate password strength (0-4)
+ */
+export const getPasswordStrength = (password) => {
+    let score = 0;
+    if (password.length >= 8)
+        score++;
+    if (password.length >= 12)
+        score++;
+    if (/[A-Z]/.test(password) && /[a-z]/.test(password))
+        score++;
+    if (/[0-9]/.test(password))
+        score++;
+    if (/[^A-Za-z0-9]/.test(password))
+        score++;
+    const strengths = [
+        { label: "Very Weak", color: "bg-red-500" },
+        { label: "Weak", color: "bg-orange-500" },
+        { label: "Fair", color: "bg-yellow-500" },
+        { label: "Good", color: "bg-blue-500" },
+        { label: "Strong", color: "bg-green-500" },
+    ];
+    return {
+        score,
+        label: strengths[score].label,
+        color: strengths[score].color,
+    };
+};
+// ============================================================================
+// NUMERIC VALIDATORS
+// ============================================================================
+/**
+ * Validate if value is a positive number
+ */
+export const isPositiveNumber = (value) => {
+    return !isNaN(value) && value > 0;
+};
+/**
+ * Validate if value is a non-negative number
+ */
+export const isNonNegativeNumber = (value) => {
+    return !isNaN(value) && value >= 0;
+};
+/**
+ * Validate quantity (must be positive)
+ */
+export const isValidQuantity = (quantity) => {
+    return isPositiveNumber(quantity);
+};
+/**
+ * Get quantity validation error message
+ */
+export const getQuantityError = (quantity) => {
+    if (isNaN(quantity)) {
+        return "Quantity must be a valid number";
+    }
+    if (!isValidQuantity(quantity)) {
+        return "Quantity must be greater than 0";
+    }
+    return null;
+};
+/**
+ * Validate price (must be positive)
+ */
+export const isValidPrice = (price) => {
+    return isPositiveNumber(price);
+};
+/**
+ * Get price validation error message
+ */
+export const getPriceError = (price, fieldName = "Price") => {
+    if (isNaN(price)) {
+        return `${fieldName} must be a valid number`;
+    }
+    if (!isValidPrice(price)) {
+        return `${fieldName} must be greater than 0`;
+    }
+    return null;
+};
+/**
+ * Validate fees (must be non-negative)
+ */
+export const isValidFees = (fees) => {
+    return isNonNegativeNumber(fees);
+};
+/**
+ * Get fees validation error message
+ */
+export const getFeesError = (fees) => {
+    if (isNaN(fees)) {
+        return "Fees must be a valid number";
+    }
+    if (!isValidFees(fees)) {
+        return "Fees cannot be negative";
+    }
+    return null;
+};
+// ============================================================================
+// STRING VALIDATORS
+// ============================================================================
+/**
+ * Validate if string is not empty
+ */
+export const isNotEmpty = (value) => {
+    return value !== null && value !== undefined && value.trim() !== "";
+};
+/**
+ * Get required field error message
+ */
+export const getRequiredFieldError = (value, fieldName) => {
+    if (!isNotEmpty(value)) {
+        return `${fieldName} is required`;
+    }
+    return null;
+};
+/**
+ * Validate string length
+ */
+export const isValidLength = (value, min, max) => {
+    const length = value.trim().length;
+    return length >= min && length <= max;
+};
+/**
+ * Get length validation error message
+ */
+export const getLengthError = (value, min, max, fieldName) => {
+    const length = value.trim().length;
+    if (length < min) {
+        return `${fieldName} must be at least ${min} characters long`;
+    }
+    if (length > max) {
+        return `${fieldName} must be no more than ${max} characters long`;
+    }
+    return null;
+};
+// ============================================================================
+// SYMBOL VALIDATORS
+// ============================================================================
+/**
+ * Validate asset symbol format (alphanumeric, dashes allowed)
+ */
+export const isValidSymbol = (symbol) => {
+    if (!isNotEmpty(symbol))
+        return false;
+    const symbolRegex = /^[A-Z0-9-]+$/i;
+    return symbolRegex.test(symbol);
+};
+/**
+ * Get symbol validation error message
+ */
+export const getSymbolError = (symbol) => {
+    if (!isNotEmpty(symbol)) {
+        return "Symbol is required";
+    }
+    if (!isValidSymbol(symbol)) {
+        return "Symbol can only contain letters, numbers, and dashes";
+    }
+    if (symbol.length > 10) {
+        return "Symbol must be no more than 10 characters";
+    }
+    return null;
+};
+// ============================================================================
+// DATE VALIDATORS
+// ============================================================================
+/**
+ * Validate if date is not in the future
+ */
+export const isNotFutureDate = (date) => {
+    const dateObj = typeof date === "string" ? new Date(date) : date;
+    return dateObj <= new Date();
+};
+/**
+ * Validate if date is valid
+ */
+export const isValidDate = (date) => {
+    const dateObj = typeof date === "string" ? new Date(date) : date;
+    return dateObj instanceof Date && !isNaN(dateObj.getTime());
+};
+/**
+ * Get date validation error message
+ */
+export const getDateError = (date, fieldName = "Date") => {
+    if (!date) {
+        return `${fieldName} is required`;
+    }
+    if (!isValidDate(date)) {
+        return `${fieldName} is not valid`;
+    }
+    if (!isNotFutureDate(date)) {
+        return `${fieldName} cannot be in the future`;
+    }
+    return null;
+};
+// ============================================================================
+// ENUM VALIDATORS
+// ============================================================================
+/**
+ * Validate asset type
+ */
+export const isValidAssetType = (assetType) => {
+    return Object.values(AssetType).includes(assetType);
+};
+/**
+ * Get asset type validation error message
+ */
+export const getAssetTypeError = (assetType) => {
+    if (!isValidAssetType(assetType)) {
+        return "Please select a valid asset type";
+    }
+    return null;
+};
+/**
+ * Validate transaction type
+ */
+export const isValidTransactionType = (transactionType) => {
+    return Object.values(TransactionType).includes(transactionType);
+};
+/**
+ * Get transaction type validation error message
+ */
+export const getTransactionTypeError = (transactionType) => {
+    if (!isValidTransactionType(transactionType)) {
+        return "Please select a valid transaction type";
+    }
+    return null;
+};
+/**
+ * Validate alert condition
+ */
+export const isValidAlertCondition = (condition) => {
+    return Object.values(AlertCondition).includes(condition);
+};
+/**
+ * Get alert condition validation error message
+ */
+export const getAlertConditionError = (condition) => {
+    if (!isValidAlertCondition(condition)) {
+        return "Please select a valid alert condition";
+    }
+    return null;
+};
+// ============================================================================
+// CURRENCY VALIDATORS
+// ============================================================================
+/**
+ * Validate currency code (3 uppercase letters)
+ */
+export const isValidCurrency = (currency) => {
+    const currencyRegex = /^[A-Z]{3}$/;
+    return currencyRegex.test(currency);
+};
+/**
+ * Get currency validation error message
+ */
+export const getCurrencyError = (currency) => {
+    if (!isNotEmpty(currency)) {
+        return "Currency is required";
+    }
+    if (!isValidCurrency(currency)) {
+        return "Currency must be a valid 3-letter code (e.g., EUR, USD)";
+    }
+    return null;
+};
+// ============================================================================
+// PORTFOLIO VALIDATORS
+// ============================================================================
+/**
+ * Validate portfolio name
+ */
+export const isValidPortfolioName = (name) => {
+    return isNotEmpty(name) && isValidLength(name, 3, 100);
+};
+/**
+ * Get portfolio name validation error message
+ */
+export const getPortfolioNameError = (name) => {
+    const requiredError = getRequiredFieldError(name, "Portfolio name");
+    if (requiredError)
+        return requiredError;
+    return getLengthError(name, 3, 100, "Portfolio name");
+};
+// ============================================================================
+// FULL NAME VALIDATORS
+// ============================================================================
+/**
+ * Validate full name (at least 2 words)
+ */
+export const isValidFullName = (fullName) => {
+    if (!isNotEmpty(fullName))
+        return false;
+    const words = fullName.trim().split(/\s+/);
+    return words.length >= 2 && words.every((word) => word.length >= 2);
+};
+/**
+ * Get full name validation error message
+ */
+export const getFullNameError = (fullName) => {
+    if (!isNotEmpty(fullName)) {
+        return "Full name is required";
+    }
+    if (!isValidFullName(fullName)) {
+        return "Please enter your first and last name";
+    }
+    return null;
+};
+// ============================================================================
+// COMPOSITE VALIDATORS
+// ============================================================================
+/**
+ * Validate entire portfolio form
+ */
+export const validatePortfolioForm = (data) => {
+    const errors = {};
+    const nameError = getPortfolioNameError(data.name);
+    if (nameError)
+        errors.name = nameError;
+    const descriptionError = getLengthError(data.description, 0, 500, "Description");
+    if (descriptionError)
+        errors.description = descriptionError;
+    const currencyError = getCurrencyError(data.currency);
+    if (currencyError)
+        errors.currency = currencyError;
+    return errors;
+};
+/**
+ * Validate entire asset form
+ */
+export const validateAssetForm = (data) => {
+    const errors = {};
+    const symbolError = getSymbolError(data.symbol);
+    if (symbolError)
+        errors.symbol = symbolError;
+    const assetTypeError = getAssetTypeError(data.assetType);
+    if (assetTypeError)
+        errors.assetType = assetTypeError;
+    const quantityError = getQuantityError(data.quantity);
+    if (quantityError)
+        errors.quantity = quantityError;
+    const priceError = getPriceError(data.avgPurchasePrice, "Average purchase price");
+    if (priceError)
+        errors.avgPurchasePrice = priceError;
+    const dateError = getDateError(data.purchaseDate, "Purchase date");
+    if (dateError)
+        errors.purchaseDate = dateError;
+    return errors;
+};
+/**
+ * Check if form has any errors
+ */
+export const hasErrors = (errors) => {
+    return Object.keys(errors).length > 0;
+};
