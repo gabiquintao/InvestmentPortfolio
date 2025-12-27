@@ -25,8 +25,8 @@ function App() {
         <Route path="/portfolios/:id" element={<PortfolioDetailPage />} />
         <Route path="/transactions" element={<TransactionsPage />} />
         {/* Redirects */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </HashRouter>
   );
