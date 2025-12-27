@@ -14,7 +14,7 @@ import TransactionsPage from "./pages/TransactionsPage";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/InvestmentPortfolio">
       <Routes>
         {/* Páginas públicas */}
         <Route path="/login" element={<LoginPage />} />
