@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 // Páginas públicas
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
@@ -12,7 +12,7 @@ import TransactionsPage from "./pages/TransactionsPage";
 
 function App() {
   return (
-    <HashRouter>
+    <BrowserRouter basename="/InvestmentPortfolio">
       <Routes>
         {/* Páginas públicas */}
         <Route path="/login" element={<LoginPage />} />
@@ -28,7 +28,7 @@ function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
 export default App;

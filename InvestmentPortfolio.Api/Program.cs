@@ -2,12 +2,13 @@
 // File: InvestmentPortfolio.Api/Program.cs
 // Purpose: Configures and starts the Investment Portfolio API application.
 //          Sets up services, authentication, WCF clients, CORS, OpenAPI, logging,
-//          and middleware pipeline.
+//          middleware pipeline, and SQL Azure DB connection using Managed Identity.
 // ============================================================================
 using FluentValidation;
 using InvestmentPortfolio.Api.WcfClients;
 using InvestmentPortfolio.Application.Validators.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
@@ -48,11 +49,25 @@ builder.Services.AddScoped<AlertWcfClient>();
 // ============================================================================
 // HTTP Clients for External Services
 // ============================================================================
-// Market Data Service HTTP Client
 builder.Services.AddHttpClient("MarketDataService", client =>
 {
 	client.BaseAddress = new Uri(marketDataServiceUrl);
 	client.Timeout = TimeSpan.FromSeconds(30);
+});
+
+// ============================================================================
+// SQL Azure Database Context
+// ============================================================================
+builder.Services.AddDbContext<DbContext>(options =>
+{
+	var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+	if (string.IsNullOrWhiteSpace(connectionString))
+	{
+		throw new InvalidOperationException("DefaultConnection not configured");
+	}
+
+	// Use Managed Identity if Authentication=Active Directory Default is present
+	options.UseSqlServer(connectionString);
 });
 
 // ============================================================================
@@ -95,7 +110,6 @@ builder.Services.AddCors(options =>
 // ============================================================================
 builder.Services.AddOpenApi(options =>
 {
-	// Document-level transformation
 	options.AddDocumentTransformer((document, _, _) =>
 	{
 		document.Info = new OpenApiInfo
@@ -118,7 +132,6 @@ builder.Services.AddOpenApi(options =>
 		return Task.CompletedTask;
 	});
 
-	// Operation-level security transformation
 	options.AddOperationTransformer((operation, context, _) =>
 	{
 		operation.Security ??= new List<OpenApiSecurityRequirement>();
@@ -149,7 +162,6 @@ var app = builder.Build();
 // Middleware Pipeline
 // ============================================================================
 app.UseCors("AllowAll");
-
 app.UseAuthentication();
 app.UseAuthorization();
 
