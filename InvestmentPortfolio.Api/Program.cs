@@ -56,7 +56,7 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
-// CORS
+// CORS - CORRIGIDO
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy("AllowAll", policy =>
@@ -67,8 +67,8 @@ builder.Services.AddCors(options =>
 			"https://gabiquintao.github.io"
 		)
 		.AllowAnyMethod()
-		.AllowAnyHeader()
-		.AllowCredentials();
+		.AllowAnyHeader();
+		// ?? REMOVE AllowCredentials se não estás a usar cookies
 	});
 });
 
@@ -114,35 +114,43 @@ builder.Logging.AddDebug();
 
 var app = builder.Build();
 
-// Middleware
-app.UseCors("AllowAll");
+// Middleware - ORDEM IMPORTANTE
+if (app.Environment.IsDevelopment())
+{
+	app.UseSwagger();
+	app.UseSwaggerUI();
+	app.MapScalarApiReference(options =>
+	{
+		options
+			.WithTitle("Investment Portfolio API")
+			.WithTheme(ScalarTheme.Purple)
+			.WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+	});
+}
+
+app.UseCors("AllowAll"); // ?? CORS antes de tudo
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Swagger & Scalar UI
-app.UseSwagger();
-app.UseSwaggerUI();
-app.MapScalarApiReference(options =>
-{
-	options
-		.WithTitle("Investment Portfolio API")
-		.WithTheme(ScalarTheme.Purple)
-		.WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
-});
-
-// ============================================================================
-// Controllers - ADICIONAR ESTA LINHA!
-// ============================================================================
 app.MapControllers();
+
+// Test endpoint
+app.MapGet("/", () => "Investment Portfolio API is running!");
 
 // Logging
 app.Lifetime.ApplicationStarted.Register(() =>
 {
 	var logger = app.Services.GetRequiredService<ILoggerFactory>()
 							 .CreateLogger("Startup");
-	logger.LogInformation("Investment Portfolio API is running");
-	logger.LogInformation("Open Scalar UI at: http://localhost:5001/scalar/v1");
-	logger.LogInformation("Market Data Service URL: {MarketDataUrl}", marketDataServiceUrl);
+
+	logger.LogInformation("=== Investment Portfolio API Started ===");
+	logger.LogInformation("API URLs: https://localhost:7039 | http://localhost:5012");
+	logger.LogInformation("Swagger UI: https://localhost:7039/swagger");
+	logger.LogInformation("Scalar UI: https://localhost:7039/scalar/v1");
+	logger.LogInformation("Market Data Service: {MarketDataUrl}", marketDataServiceUrl);
+	logger.LogInformation("WCF Auth Service: {WcfUrl}",
+		builder.Configuration["WcfServices:AuthService"]);
 });
 
 app.Run();

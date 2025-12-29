@@ -47,7 +47,7 @@ else
 }
 
 // ============================================================================
-// CORS - Allow API, Frontend, and GitHub Pages
+// CORS - CORRIGIDO (sem AllowCredentials)
 // ============================================================================
 builder.Services.AddCors(options =>
 {
@@ -57,11 +57,11 @@ builder.Services.AddCors(options =>
 			"http://localhost:3000",
 			"http://localhost:5173",
 			"https://investmentportfolio-api.azurewebsites.net",
-			"https://gabiquintao.github.io"  // GitHub Pages
+			"https://gabiquintao.github.io"
 		)
 		.AllowAnyMethod()
-		.AllowAnyHeader()
-		.AllowCredentials();
+		.AllowAnyHeader();
+		// ?? REMOVIDO: .AllowCredentials()
 	});
 });
 
@@ -75,9 +75,9 @@ builder.Logging.AddDebug();
 var app = builder.Build();
 
 // ============================================================================
-// Middleware
+// Middleware - ORDEM CORRETA
 // ============================================================================
-app.UseCors("AllowFrontend");
+app.UseCors("AllowFrontend"); // ?? CORS PRIMEIRO
 
 // Swagger (sempre disponível)
 app.UseSwagger();
@@ -97,6 +97,9 @@ app.MapScalarApiReference(options =>
 // ============================================================================
 app.MapControllers();
 
+// Health check endpoint
+app.MapGet("/", () => "Market Data Service is running!");
+
 // ============================================================================
 // Startup Log
 // ============================================================================
@@ -104,8 +107,18 @@ app.Lifetime.ApplicationStarted.Register(() =>
 {
 	var logger = app.Services.GetRequiredService<ILogger<Program>>();
 	logger.LogInformation("=== Market Data Service Started ===");
-	logger.LogInformation("Swagger: https://investmentportfolio-marketdata.azurewebsites.net/swagger");
-	logger.LogInformation("Health: https://investmentportfolio-marketdata.azurewebsites.net/api/market/health");
+
+	if (app.Environment.IsDevelopment())
+	{
+		logger.LogInformation("Local: https://localhost:5088");
+		logger.LogInformation("Swagger: https://localhost:5088/swagger");
+		logger.LogInformation("Scalar: https://localhost:5088/scalar/v1");
+	}
+	else
+	{
+		logger.LogInformation("Azure: https://investmentportfolio-marketdata.azurewebsites.net");
+		logger.LogInformation("Swagger: https://investmentportfolio-marketdata.azurewebsites.net/swagger");
+	}
 });
 
 app.Run();

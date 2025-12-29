@@ -1,10 +1,10 @@
 // ============================================================================
-// Axios instance for MarketData API (running on port 5088)
+// Axios instance for MarketData API (via Vite proxy)
 // ============================================================================
 import axios from "axios";
 
 const MARKET_API_BASE_URL =
-  import.meta.env.VITE_MARKET_API_BASE_URL || "http://localhost:5088/api/market";
+  import.meta.env.VITE_MARKET_API_BASE_URL || "/market";
 
 const marketApi = axios.create({
   baseURL: MARKET_API_BASE_URL,
