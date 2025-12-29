@@ -58,7 +58,7 @@ SQL Server Database
 ### 1. Configuração da Base de Dados
 ```bash
 # Criar base de dados no SQL Server
-# Executar script em: /db/create-database.sql
+# Executar scripts em: /docs
 ```
 
 ### 2. Configurar Redis (Opcional)
@@ -107,10 +107,6 @@ npm run dev
 ---
 
 ## 🧪 Testes
-
-### Postman
-
-Importar a coleção em `/postman/InvestmentPortfolio.postman_collection.json`
 
 ### Swagger UI
 
@@ -171,7 +167,7 @@ Acessar:
 - FluentValidation
 
 ### Frontend
-- React 18
+- React
 - TypeScript
 - Vite
 - Tailwind CSS
