@@ -1,63 +1,77 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿// ============================================================================
+// File: InvestmentPortfolio.MarketData/Services/MemoryCacheService.cs
+// Purpose: In-memory implementation of <see cref="ICacheService"/>.
+//          Used as a fallback cache when distributed cache is unavailable.
+// ============================================================================
 
-namespace InvestmentPortfolio.MarketData.Services;
+using Microsoft.Extensions.Caching.Memory;
 
-/// <summary>
-/// In-memory cache service implementation as fallback when Redis is unavailable
-/// </summary>
-public class MemoryCacheService : ICacheService
+namespace InvestmentPortfolio.MarketData.Services
 {
-	private readonly IMemoryCache _cache;
-	private readonly ILogger<MemoryCacheService> _logger;
-
-	public MemoryCacheService(IMemoryCache cache, ILogger<MemoryCacheService> logger)
+	/// <summary>
+	/// In-memory cache service implementation using <see cref="IMemoryCache"/>.
+	/// Intended as a fallback when a distributed cache (e.g., Redis) is unavailable.
+	/// </summary>
+	public class MemoryCacheService : ICacheService
 	{
-		_cache = cache ?? throw new ArgumentNullException(nameof(cache));
-		_logger = logger;
-	}
+		private readonly IMemoryCache _cache;
+		private readonly ILogger<MemoryCacheService> _logger;
 
-	public Task<T?> GetAsync<T>(string key) where T : class
-	{
-		try
+		/// <summary>
+		/// Initializes a new instance of the <see cref="MemoryCacheService"/> class.
+		/// </summary>
+		public MemoryCacheService(IMemoryCache cache, ILogger<MemoryCacheService> logger)
 		{
-			_cache.TryGetValue(key, out T? value);
-			return Task.FromResult(value);
+			_cache = cache ?? throw new ArgumentNullException(nameof(cache));
+			_logger = logger;
 		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex, "Error getting value from memory cache for key: {Key}", key);
-			return Task.FromResult<T?>(null);
-		}
-	}
 
-	public Task SetAsync<T>(string key, T value, TimeSpan expiration) where T : class
-	{
-		try
+		/// <inheritdoc />
+		public Task<T?> GetAsync<T>(string key) where T : class
 		{
-			_cache.Set(key, value, new MemoryCacheEntryOptions
+			try
 			{
-				AbsoluteExpirationRelativeToNow = expiration
-			});
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex, "Error setting value in memory cache for key: {Key}", key);
-		}
-
-		return Task.CompletedTask;
-	}
-
-	public Task RemoveAsync(string key)
-	{
-		try
-		{
-			_cache.Remove(key);
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex, "Error removing value from memory cache for key: {Key}", key);
+				_cache.TryGetValue(key, out T? value);
+				return Task.FromResult(value);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error getting value from memory cache for key: {Key}", key);
+				return Task.FromResult<T?>(null);
+			}
 		}
 
-		return Task.CompletedTask;
+		/// <inheritdoc />
+		public Task SetAsync<T>(string key, T value, TimeSpan expiration) where T : class
+		{
+			try
+			{
+				_cache.Set(key, value, new MemoryCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = expiration
+				});
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error setting value in memory cache for key: {Key}", key);
+			}
+
+			return Task.CompletedTask;
+		}
+
+		/// <inheritdoc />
+		public Task RemoveAsync(string key)
+		{
+			try
+			{
+				_cache.Remove(key);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error removing value from memory cache for key: {Key}", key);
+			}
+
+			return Task.CompletedTask;
+		}
 	}
 }

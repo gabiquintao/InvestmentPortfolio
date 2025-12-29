@@ -75,7 +75,7 @@ builder.Logging.AddDebug();
 var app = builder.Build();
 
 // ============================================================================
-// Middleware - ORDEM CORRETA
+// Middleware
 // ============================================================================
 app.UseCors("AllowFrontend"); // ?? CORS PRIMEIRO
 
