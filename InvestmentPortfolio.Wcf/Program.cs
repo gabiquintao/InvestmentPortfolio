@@ -1,15 +1,13 @@
 // ============================================================================
 // File: InvestmentPortfolio.Wcf/Program.cs
-// Purpose: Configures and starts the WCF services for the InvestmentPortfolio application.
-//          Sets up dependency injection for infrastructure and application services, 
-//          configures AutoMapper, logging, CORS, and exposes WCF endpoints with metadata.
+// Purpose: CoreWCF service host for InvestmentPortfolio (HTTPS-ready for Azure)
 // ============================================================================
 
+using AutoMapper;
 using CoreWCF;
 using CoreWCF.Channels;
 using CoreWCF.Configuration;
 using CoreWCF.Description;
-using AutoMapper;
 using InvestmentPortfolio.Application.Interfaces;
 using InvestmentPortfolio.Application.Mappings;
 using InvestmentPortfolio.Application.Services;
@@ -19,7 +17,8 @@ using InvestmentPortfolio.Infrastructure.Data;
 using InvestmentPortfolio.Infrastructure.Repositories;
 using InvestmentPortfolio.Infrastructure.UnitOfWork;
 using InvestmentPortfolio.Wcf.Services;
-
+using Microsoft.AspNetCore.HttpOverrides;
+using System.Xml;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +27,21 @@ var builder = WebApplication.CreateBuilder(args);
 // ============================================================================
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
 	?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+// ============================================================================
+// ENABLE HTTPS LOCALLY (REQUIRED FOR CoreWCF + Transport)
+// ============================================================================
+if (builder.Environment.IsDevelopment())
+{
+	builder.WebHost.ConfigureKestrel(options =>
+	{
+		options.ListenAnyIP(5000); // HTTP (optional)
+		options.ListenAnyIP(5001, listenOptions =>
+		{
+			listenOptions.UseHttps(); // HTTPS for CoreWCF
+		});
+	});
+}
 
 // ============================================================================
 // CORS
@@ -43,23 +57,20 @@ builder.Services.AddCors(options =>
 });
 
 // ============================================================================
-// Register Infrastructure Services
+// Infrastructure Services
 // ============================================================================
-builder.Services.AddSingleton<IDbConnectionFactory>(sp =>
+builder.Services.AddSingleton<IDbConnectionFactory>(_ =>
 	new DbConnectionFactory(connectionString));
 
-// Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
-
-// Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // ============================================================================
-// Register Application Services
+// Application Services
 // ============================================================================
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPortfolioService, PortfolioService>();
@@ -69,160 +80,148 @@ builder.Services.AddScoped<IAlertService, AlertService>();
 builder.Services.AddSingleton<IJwtService, JwtService>();
 
 // ============================================================================
-// Register WCF Services
+// WCF Services
 // ============================================================================
-builder.Services.AddScoped<AuthWcfService>();
-builder.Services.AddScoped<PortfolioWcfService>();
-builder.Services.AddScoped<AssetWcfService>();
-builder.Services.AddScoped<TransactionWcfService>();
-builder.Services.AddScoped<AlertWcfService>();
+builder.Services.AddTransient<AuthWcfService>();
+builder.Services.AddTransient<PortfolioWcfService>();
+builder.Services.AddTransient<AssetWcfService>();
+builder.Services.AddTransient<TransactionWcfService>();
+builder.Services.AddTransient<AlertWcfService>();
 
 // ============================================================================
 // AutoMapper
 // ============================================================================
-builder.Services.AddSingleton<IMapper>(provider =>
+builder.Services.AddSingleton<IMapper>(_ =>
 {
-	var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-	var configExpression = new MapperConfigurationExpression();
-	configExpression.AddProfile<MappingProfile>();
-	var config = new MapperConfiguration(configExpression, loggerFactory);
+	var config = new MapperConfiguration(cfg =>
+	{
+		cfg.AddProfile<MappingProfile>();
+	});
 	return config.CreateMapper();
 });
 
 // ============================================================================
-// Logging Configuration
+// Logging
 // ============================================================================
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
-
-if (builder.Environment.IsProduction())
-{
-	builder.Logging.SetMinimumLevel(LogLevel.Warning);
-}
-else
-{
-	builder.Logging.SetMinimumLevel(LogLevel.Information);
-}
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 // ============================================================================
-// Configure CoreWCF
+// CoreWCF Setup
 // ============================================================================
 builder.Services.AddServiceModelServices();
 builder.Services.AddServiceModelMetadata();
-builder.Services.AddSingleton<IServiceBehavior, UseRequestHeadersForMetadataAddressBehavior>();
+
+// REQUIRED FOR AZURE HTTPS METADATA
+builder.Services.AddSingleton<IServiceBehavior,
+	UseRequestHeadersForMetadataAddressBehavior>();
 
 var app = builder.Build();
 
 // ============================================================================
-// Middleware Pipeline
+// Forwarded Headers (REQUIRED FOR AZURE)
 // ============================================================================
-if (app.Environment.IsDevelopment())
+app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
-	app.UseDeveloperExceptionPage();
-}
+	ForwardedHeaders =
+		ForwardedHeaders.XForwardedFor |
+		ForwardedHeaders.XForwardedProto
+});
 
+// ============================================================================
+// Middleware
+// ============================================================================
+app.UseRouting();
 app.UseCors("AllowAll");
 
 // ============================================================================
-// Configure CoreWCF Endpoints
+// CoreWCF Endpoints (HTTPS ONLY)
 // ============================================================================
 app.UseServiceModel(serviceBuilder =>
 {
-	// BINDING CORRIGIDO - Tem que ser igual ao cliente
 	var binding = new BasicHttpBinding
 	{
 		MaxReceivedMessageSize = int.MaxValue,
 		MaxBufferSize = int.MaxValue,
+		ReaderQuotas = XmlDictionaryReaderQuotas.Max,
 		Security = new BasicHttpSecurity
 		{
-			Mode = BasicHttpSecurityMode.None
+			// HTTPS REQUIRED (LOCAL + AZURE)
+			Mode = BasicHttpSecurityMode.Transport
 		}
 	};
 
-	// ========================================================================
-	// Auth Service
-	// ========================================================================
 	serviceBuilder.AddService<AuthWcfService>(options =>
 	{
 		options.DebugBehavior.IncludeExceptionDetailInFaults = true;
 	});
 	serviceBuilder.AddServiceEndpoint<AuthWcfService, IAuthWcfService>(
-		binding,
-		"/AuthService.svc"
-	);
+		binding, "/AuthService.svc");
 
-	// ========================================================================
-	// Portfolio Service
-	// ========================================================================
 	serviceBuilder.AddService<PortfolioWcfService>(options =>
 	{
 		options.DebugBehavior.IncludeExceptionDetailInFaults = true;
 	});
 	serviceBuilder.AddServiceEndpoint<PortfolioWcfService, IPortfolioWcfService>(
-		binding,
-		"/PortfolioService.svc"
-	);
+		binding, "/PortfolioService.svc");
 
-	// ========================================================================
-	// Asset Service
-	// ========================================================================
 	serviceBuilder.AddService<AssetWcfService>(options =>
 	{
 		options.DebugBehavior.IncludeExceptionDetailInFaults = true;
 	});
 	serviceBuilder.AddServiceEndpoint<AssetWcfService, IAssetWcfService>(
-		binding,
-		"/AssetService.svc"
-	);
+		binding, "/AssetService.svc");
 
-	// ========================================================================
-	// Transaction Service
-	// ========================================================================
 	serviceBuilder.AddService<TransactionWcfService>(options =>
 	{
 		options.DebugBehavior.IncludeExceptionDetailInFaults = true;
 	});
 	serviceBuilder.AddServiceEndpoint<TransactionWcfService, ITransactionWcfService>(
-		binding,
-		"/TransactionService.svc"
-	);
+		binding, "/TransactionService.svc");
 
-	// ========================================================================
-	// Alert Service
-	// ========================================================================
 	serviceBuilder.AddService<AlertWcfService>(options =>
 	{
 		options.DebugBehavior.IncludeExceptionDetailInFaults = true;
 	});
 	serviceBuilder.AddServiceEndpoint<AlertWcfService, IAlertWcfService>(
-		binding,
-		"/AlertService.svc"
-	);
+		binding, "/AlertService.svc");
 
-	// ========================================================================
-	// Enable WSDL metadata
-	// ========================================================================
-	var serviceMetadataBehavior = app.Services.GetRequiredService<ServiceMetadataBehavior>();
-	serviceMetadataBehavior.HttpGetEnabled = true;
-	serviceMetadataBehavior.HttpsGetEnabled = false;
+	var metadata = app.Services.GetRequiredService<ServiceMetadataBehavior>();
+	metadata.HttpGetEnabled = false;
+	metadata.HttpsGetEnabled = true;
 });
 
 // ============================================================================
-// Startup Message
+// Test Endpoint
+// ============================================================================
+app.UseEndpoints(endpoints =>
+{
+	endpoints.MapGet("/", async context =>
+	{
+		await context.Response.WriteAsync(
+			"InvestmentPortfolio WCF Services running (HTTPS enabled)");
+	});
+});
+
+// ============================================================================
+// Startup Logging
 // ============================================================================
 app.Lifetime.ApplicationStarted.Register(() =>
 {
 	var logger = app.Services.GetRequiredService<ILogger<Program>>();
-	var urls = builder.Configuration["ASPNETCORE_URLS"] ?? "http://localhost:5003";
 
-	logger.LogInformation("WCF Services are running");
-	logger.LogInformation("WSDL endpoints:");
-	logger.LogInformation("  - Auth: {Url}/AuthService.svc?wsdl", urls);
-	logger.LogInformation("  - Portfolio: {Url}/PortfolioService.svc?wsdl", urls);
-	logger.LogInformation("  - Asset: {Url}/AssetService.svc?wsdl", urls);
-	logger.LogInformation("  - Transaction: {Url}/TransactionService.svc?wsdl", urls);
-	logger.LogInformation("  - Alert: {Url}/AlertService.svc?wsdl", urls);
+	logger.LogInformation("=== InvestmentPortfolio WCF Services Started ===");
+	logger.LogInformation("HTTPS endpoints:");
+	logger.LogInformation("  - https://localhost:5001/AuthService.svc");
+	logger.LogInformation("  - https://localhost:5001/PortfolioService.svc");
+	logger.LogInformation("  - https://localhost:5001/AssetService.svc");
+	logger.LogInformation("  - https://localhost:5001/TransactionService.svc");
+	logger.LogInformation("  - https://localhost:5001/AlertService.svc");
 });
 
+// ============================================================================
+// Run
+// ============================================================================
 app.Run();

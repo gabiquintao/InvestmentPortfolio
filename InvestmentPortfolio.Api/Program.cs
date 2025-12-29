@@ -1,79 +1,42 @@
-// ============================================================================
-// File: InvestmentPortfolio.Api/Program.cs
-// Purpose: Configures and starts the Investment Portfolio API application.
-//          Sets up services, authentication, CORS, OpenAPI, logging,
-//          middleware pipeline, and SQL Azure DB connection using Managed Identity.
-// ============================================================================
 using FluentValidation;
 using InvestmentPortfolio.Api.WcfClients;
-using InvestmentPortfolio.Application.Interfaces;
-using InvestmentPortfolio.Application.Services;
 using InvestmentPortfolio.Application.Validators.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ============================================================================
 // Configuration
-// ============================================================================
 var jwtSecretKey = builder.Configuration["Jwt:SecretKey"]
 	?? throw new InvalidOperationException("JWT SecretKey not configured");
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "InvestmentPortfolio";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "InvestmentPortfolio";
-
-// Market Data Service URL
 var marketDataServiceUrl = builder.Configuration["Services:MarketDataUrl"] ?? "http://localhost:5088";
 
-// ============================================================================
 // Services
-// ============================================================================
 builder.Services.AddControllers();
 
-// ============================================================================
 // FluentValidation
-// ============================================================================
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
 
-// ============================================================================
-// WCF Clients (now DI wrappers)
-// ============================================================================
+// WCF Clients
 builder.Services.AddScoped<AlertWcfClient>();
 builder.Services.AddScoped<AuthWcfClient>();
 builder.Services.AddScoped<PortfolioWcfClient>();
 builder.Services.AddScoped<AssetWcfClient>();
 builder.Services.AddScoped<TransactionWcfClient>();
 
-// ============================================================================
-// HTTP Clients for External Services
-// ============================================================================
+// HTTP Clients
 builder.Services.AddHttpClient("MarketDataService", client =>
 {
 	client.BaseAddress = new Uri(marketDataServiceUrl);
 	client.Timeout = TimeSpan.FromSeconds(30);
 });
 
-// ============================================================================
-// SQL Azure Database Context
-// ============================================================================
-builder.Services.AddDbContext<DbContext>(options =>
-{
-	var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-	if (string.IsNullOrWhiteSpace(connectionString))
-	{
-		throw new InvalidOperationException("DefaultConnection not configured");
-	}
-
-	options.UseSqlServer(connectionString);
-});
-
-// ============================================================================
 // JWT Authentication
-// ============================================================================
 builder.Services
 	.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddJwtBearer(options =>
@@ -93,97 +56,86 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
-// ============================================================================
-// CORS (Cross-Origin Resource Sharing)
-// ============================================================================
+// CORS
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy("AllowAll", policy =>
 	{
-		policy.AllowAnyOrigin()
-			  .AllowAnyMethod()
-			  .AllowAnyHeader();
+		policy.WithOrigins(
+			"http://localhost:3000",
+			"http://localhost:5173",
+			"https://gabiquintao.github.io"
+		)
+		.AllowAnyMethod()
+		.AllowAnyHeader()
+		.AllowCredentials();
 	});
 });
 
-// ============================================================================
-// OpenAPI / Swagger with Scalar UI
-// ============================================================================
-builder.Services.AddOpenApi(options =>
+// Swagger/OpenAPI
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
 {
-	options.AddDocumentTransformer((document, _, _) =>
+	options.SwaggerDoc("v1", new OpenApiInfo
 	{
-		document.Info = new OpenApiInfo
-		{
-			Title = "Investment Portfolio API",
-			Version = "v1",
-			Description = "REST API for Investment Portfolio Management System"
-		};
-
-		document.Components ??= new OpenApiComponents();
-		document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
-		document.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
-		{
-			Type = SecuritySchemeType.Http,
-			Scheme = "bearer",
-			BearerFormat = "JWT",
-			Description = "JWT Authorization header using the Bearer scheme."
-		};
-
-		return Task.CompletedTask;
+		Title = "Investment Portfolio API",
+		Version = "v1",
+		Description = "REST API for Investment Portfolio Management System"
 	});
 
-	options.AddOperationTransformer((operation, context, _) =>
+	options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
 	{
-		operation.Security ??= new List<OpenApiSecurityRequirement>();
-		operation.Security.Add(new OpenApiSecurityRequirement
-		{
-			[
-				new OpenApiSecuritySchemeReference("Bearer", context.Document)
-			] = new List<string>()
-		});
+		Type = SecuritySchemeType.Http,
+		Scheme = "bearer",
+		BearerFormat = "JWT",
+		Description = "JWT Authorization header using the Bearer scheme."
+	});
 
-		return Task.CompletedTask;
+	options.AddSecurityRequirement(new OpenApiSecurityRequirement
+	{
+		{
+			new OpenApiSecurityScheme
+			{
+				Reference = new OpenApiReference
+				{
+					Type = ReferenceType.SecurityScheme,
+					Id = "Bearer"
+				}
+			},
+			new string[] {}
+		}
 	});
 });
 
-// ============================================================================
 // Logging
-// ============================================================================
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
-// ============================================================================
-// Build Application
-// ============================================================================
-WebApplication? app = builder.Build();
+var app = builder.Build();
 
-// ============================================================================
-// Middleware Pipeline
-// ============================================================================
+// Middleware
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
-// ============================================================================
-// OpenAPI / Scalar UI
-// ============================================================================
-app.MapOpenApi();
+// Swagger & Scalar UI
+app.UseSwagger();
+app.UseSwaggerUI();
 app.MapScalarApiReference(options =>
 {
-	options.WithTitle("Investment Portfolio API")
-		   .WithTheme(ScalarTheme.Purple);
+	options
+		.WithTitle("Investment Portfolio API")
+		.WithTheme(ScalarTheme.Purple)
+		.WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
 });
 
 // ============================================================================
-// Map Controllers
+// Controllers - ADICIONAR ESTA LINHA!
 // ============================================================================
 app.MapControllers();
 
-// ============================================================================
-// Application Started Logging
-// ============================================================================
+// Logging
 app.Lifetime.ApplicationStarted.Register(() =>
 {
 	var logger = app.Services.GetRequiredService<ILoggerFactory>()
@@ -193,7 +145,4 @@ app.Lifetime.ApplicationStarted.Register(() =>
 	logger.LogInformation("Market Data Service URL: {MarketDataUrl}", marketDataServiceUrl);
 });
 
-// ============================================================================
-// Run Application
-// ============================================================================
 app.Run();

@@ -1,0 +1,104 @@
+<step title="BackgroundTrace" date="2025-12-27T13:29:55.829" instance="d1e1e3" url="/api/zipdeploy" method="POST" >
+  <step title="Updating shutdown sentinel last write time" date="2025-12-27T13:29:55.861" SemaphoreCount="7" /><!-- duration: 14ms -->
+  <step title="LockFile &apos;C:\home\site\locks\deployments.lock&apos; acquired" date="2025-12-27T13:29:55.875" /><!-- duration: 0ms -->
+  <step title="Creating temporary deployment" date="2025-12-27T13:29:55.875" /><!-- duration: 188ms -->
+  <step title="Performing fetch based deployment" date="2025-12-27T13:29:56.078" >
+    <step title="Fetching changes." date="2025-12-27T13:29:56.237" /><!-- duration: 13ms -->
+    <step title="Starting LocalZipHandler" date="2025-12-27T13:29:56.261" /><!-- duration: 47ms -->
+    <step title="Cleaning up temp folders from previous zip deployments and extracting pushed zip file C:\local\Temp\zipdeploy\f3yfcwlp.zip (10.91 MB) to C:\local\Temp\zipdeploy\extracted" date="2025-12-27T13:29:56.324" /><!-- duration: 0ms -->
+    <step title="Cleaning up temp folders from previous zip deployments and extracting pushed zip file C:\local\Temp\zipdeploy\f3yfcwlp.zip (10.91 MB) to C:\local\Temp\zipdeploy\extracted" date="2025-12-27T13:29:56.324" >
+      <step title="Extracting 136 entries to C:\local\Temp\zipdeploy\extracted directory" date="2025-12-27T13:29:56.528" >
+        <step title="Extracting to C:\local\Temp\zipdeploy\extracted\cs\Microsoft.Data.SqlClient.resources.dll ..." date="2025-12-27T13:29:56.542" /><!-- duration: 47ms -->
+        <step title="Extracting to C:\local\Temp\zipdeploy\extracted\cs\System.ServiceModel.Primitives.resources.dll ..." date="2025-12-27T13:29:56.589" /><!-- duration: 16ms -->
+        <step title="Extracting to C:\local\Temp\zipdeploy\extracted\cs\System.Web.Services.Description.resources.dll ..." date="2025-12-27T13:29:56.605" /><!-- duration: 16ms -->
+        <step title="Extracting to C:\local\Temp\zipdeploy\extracted\de\Microsoft.Data.SqlClient.resources.dll ..." date="2025-12-27T13:29:56.621" /><!-- duration: 16ms -->
+        <step title="Extracting to C:\local\Temp\zipdeploy\extracted\de\System.ServiceModel.Primitives.resources.dll ..." date="2025-12-27T13:29:56.636" /><!-- duration: 16ms -->
+        <step title="Omitting extracting file traces ..." date="2025-12-27T13:29:56.652" /><!-- duration: 16ms -->
+      </step><!-- duration: 2143ms -->
+    </step><!-- duration: 2376ms -->
+    <step title="Before sending BuildRequestReceived status to /api/updatedeploystatus" date="2025-12-27T13:29:58.778" /><!-- duration: 30ms -->
+    <step title="DeploymentManager.Deploy(id:9a764af47c744e07907c6dab957a97d7)" date="2025-12-27T13:29:58.839" >
+      <step title="Collecting changeset information" date="2025-12-27T13:29:59.199" /><!-- duration: 266ms -->
+      <step title="Updating submodules" date="2025-12-27T13:29:59.464" >
+        <step title="Updating submodules." date="2025-12-27T13:29:59.496" /><!-- duration: 0ms -->
+      </step><!-- duration: 47ms -->
+      <step title="Preparing deployment for commit id &apos;9a764af47c&apos;." date="2025-12-27T13:29:59.574" /><!-- duration: 0ms -->
+      <step title="Determining deployment builder" date="2025-12-27T13:29:59.621" >
+        <step title="Builder is BasicBuilder" date="2025-12-27T13:29:59.621" /><!-- duration: 0ms -->
+      </step><!-- duration: 16ms -->
+      <step title="Copying SSH keys" date="2025-12-27T13:29:59.652" /><!-- duration: 18ms -->
+      <step title="Building" date="2025-12-27T13:29:59.670" >
+        <step title="Generating deployment script." date="2025-12-27T13:29:59.699" /><!-- duration: 16ms -->
+        <step title="Generating deployment script" date="2025-12-27T13:29:59.714" >
+          <step title="Using cached version of the deployment script for command: -y --no-dot-deployment -r &quot;C:\local\Temp\zipdeploy\extracted&quot; -o &quot;C:\home\site\deployments\tools&quot; --basic --sitePath &quot;C:\local\Temp\zipdeploy\extracted&quot;" date="2025-12-27T13:29:59.919" /><!-- duration: 0ms -->
+          <step title="Using cached version of deployment script (command: &apos;azure -y --no-dot-deployment -r &quot;C:\local\Temp\zipdeploy\extracted&quot; -o &quot;C:\home\site\deployments\tools&quot; --basic --sitePath &quot;C:\local\Temp\zipdeploy\extracted&quot;&apos;)." date="2025-12-27T13:29:59.967" /><!-- duration: 0ms -->
+        </step><!-- duration: 272ms -->
+        <step title="Running deployment command..." date="2025-12-27T13:30:00.183" /><!-- duration: 0ms -->
+        <step title="Command: &quot;C:\home\site\deployments\tools\deploy.cmd&quot;" date="2025-12-27T13:30:00.199" /><!-- duration: 16ms -->
+        <step title="Executing external process" date="2025-12-27T13:30:00.230" type="process" path="starter.cmd" arguments="&quot;C:\home\site\deployments\tools\deploy.cmd&quot;" >
+          <step title="Handling Basic Web Site deployment." date="2025-12-27T13:30:02.392" /><!-- duration: 10ms -->
+          <step title="Creating app_offline.htm" date="2025-12-27T13:30:02.433" /><!-- duration: 18ms -->
+          <step title="KuduSync.NET from: &apos;C:\local\Temp\zipdeploy\extracted&apos; to: &apos;C:\home\site\wwwroot&apos;" date="2025-12-27T13:30:02.481" /><!-- duration: 0ms -->
+          <step title="Deleting file: &apos;publish\appsettings.json&apos;" date="2025-12-27T13:30:02.559" /><!-- duration: 0ms -->
+          <step title="Deleting file: &apos;publish\appsettings.Production.json&apos;" date="2025-12-27T13:30:02.589" /><!-- duration: 47ms -->
+          <step title="Deleting file: &apos;publish\InvestmentPortfolio.Wcf.deps.json&apos;" date="2025-12-27T13:30:02.656" /><!-- duration: 12ms -->
+          <step title="Deleting file: &apos;publish\InvestmentPortfolio.Wcf.runtimeconfig.json&apos;" date="2025-12-27T13:30:02.685" /><!-- duration: 20ms -->
+          <step title="Deleting file: &apos;publish\InvestmentPortfolio.Wcf.staticwebassets.endpoints.json&apos;" date="2025-12-27T13:30:02.734" /><!-- duration: 12ms -->
+          <step title="Deleting file: &apos;publish\web.config&apos;" date="2025-12-27T13:30:02.812" /><!-- duration: 29ms -->
+          <step title="Deleting file: &apos;publish\publish\appsettings.json&apos;" date="2025-12-27T13:30:02.890" /><!-- duration: 0ms -->
+          <step title="Deleting file: &apos;publish\publish\appsettings.Production.json&apos;" date="2025-12-27T13:30:02.919" /><!-- duration: 0ms -->
+          <step title="Deleting file: &apos;publish\publish\InvestmentPortfolio.Wcf.deps.json&apos;" date="2025-12-27T13:30:02.968" /><!-- duration: 49ms -->
+          <step title="Deleting file: &apos;publish\publish\InvestmentPortfolio.Wcf.runtimeconfig.json&apos;" date="2025-12-27T13:30:03.077" /><!-- duration: 29ms -->
+          <step title="Deleting file: &apos;publish\publish\InvestmentPortfolio.Wcf.staticwebassets.endpoints.json&apos;" date="2025-12-27T13:30:03.186" /><!-- duration: 30ms -->
+          <step title="Deleting file: &apos;publish\publish\web.config&apos;" date="2025-12-27T13:30:03.264" /><!-- duration: 29ms -->
+          <step title="Deleting file: &apos;publish\publish\publish\appsettings.json&apos;" date="2025-12-27T13:30:03.312" /><!-- duration: 11ms -->
+          <step title="Deleting file: &apos;publish\publish\publish\appsettings.Production.json&apos;" date="2025-12-27T13:30:03.355" /><!-- duration: 0ms -->
+          <step title="Deleting file: &apos;publish\publish\publish\InvestmentPortfolio.Wcf.deps.json&apos;" date="2025-12-27T13:30:03.372" /><!-- duration: 0ms -->
+          <step title="Deleting file: &apos;publish\publish\publish\InvestmentPortfolio.Wcf.runtimeconfig.json&apos;" date="2025-12-27T13:30:03.402" /><!-- duration: 18ms -->
+          <step title="Deleting file: &apos;publish\publish\publish\InvestmentPortfolio.Wcf.staticwebassets.endpoints.json&apos;" date="2025-12-27T13:30:03.433" /><!-- duration: 0ms -->
+          <step title="Deleting file: &apos;publish\publish\publish\web.config&apos;" date="2025-12-27T13:30:03.450" /><!-- duration: 0ms -->
+          <step title="Deleting directory: &apos;publish\publish\publish&apos;" date="2025-12-27T13:30:03.465" /><!-- duration: 0ms -->
+          <step title="Deleting directory: &apos;publish\publish&apos;" date="2025-12-27T13:30:03.480" /><!-- duration: 0ms -->
+          <step title="Deleting directory: &apos;publish&apos;" date="2025-12-27T13:30:03.498" /><!-- duration: 0ms -->
+          <step title="Deleting file: &apos;System.ServiceModel.dll&apos;" date="2025-12-27T13:30:03.511" /><!-- duration: 34ms -->
+          <step title="Deleting file: &apos;System.ServiceModel.Duplex.dll&apos;" date="2025-12-27T13:30:03.558" /><!-- duration: 0ms -->
+          <step title="Deleting file: &apos;System.ServiceModel.Security.dll&apos;" date="2025-12-27T13:30:03.574" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;AutoMapper.dll&apos;" date="2025-12-27T13:30:03.574" /><!-- duration: 16ms -->
+          <step title="Copying file: &apos;FluentValidation.DependencyInjectionExtensions.dll&apos;" date="2025-12-27T13:30:03.590" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;FluentValidation.dll&apos;" date="2025-12-27T13:30:03.605" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Application.dll&apos;" date="2025-12-27T13:30:03.653" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Application.pdb&apos;" date="2025-12-27T13:30:03.683" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Contracts.dll&apos;" date="2025-12-27T13:30:03.699" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Contracts.pdb&apos;" date="2025-12-27T13:30:03.715" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Domain.dll&apos;" date="2025-12-27T13:30:03.731" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Domain.pdb&apos;" date="2025-12-27T13:30:03.746" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Infrastructure.dll&apos;" date="2025-12-27T13:30:03.781" /><!-- duration: 29ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Infrastructure.pdb&apos;" date="2025-12-27T13:30:03.810" /><!-- duration: 14ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Wcf.deps.json&apos;" date="2025-12-27T13:30:03.859" /><!-- duration: 11ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Wcf.dll&apos;" date="2025-12-27T13:30:03.871" /><!-- duration: 18ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Wcf.exe&apos;" date="2025-12-27T13:30:03.902" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Wcf.pdb&apos;" date="2025-12-27T13:30:03.918" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Wcf.runtimeconfig.json&apos;" date="2025-12-27T13:30:03.966" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Wcf.staticwebassets.endpoints.json&apos;" date="2025-12-27T13:30:03.996" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;Microsoft.AspNetCore.OpenApi.dll&apos;" date="2025-12-27T13:30:04.015" /><!-- duration: 12ms -->
+          <step title="Copying file: &apos;Microsoft.Bcl.Cryptography.dll&apos;" date="2025-12-27T13:30:04.044" /><!-- duration: 19ms -->
+          <step title="Copying file: &apos;Microsoft.Data.SqlClient.dll&apos;" date="2025-12-27T13:30:04.074" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;Microsoft.EntityFrameworkCore.Abstractions.dll&apos;" date="2025-12-27T13:30:04.093" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;Microsoft.EntityFrameworkCore.dll&apos;" date="2025-12-27T13:30:04.105" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;Microsoft.EntityFrameworkCore.Relational.dll&apos;" date="2025-12-27T13:30:04.105" /><!-- duration: 18ms -->
+          <step title="Copying file: &apos;Microsoft.EntityFrameworkCore.SqlServer.dll&apos;" date="2025-12-27T13:30:04.136" /><!-- duration: 0ms -->
+          <step title="Omitting next output lines..." date="2025-12-27T13:30:04.152" /><!-- duration: 0ms -->
+          <step title="Finished successfully." date="2025-12-27T13:30:04.168" /><!-- duration: 0ms -->
+        </step><!-- duration: 3953ms -->
+        <step title="Running post deployment command(s)..." date="2025-12-27T13:30:04.246" /><!-- duration: 0ms -->
+        <step title="Triggering recycle (preview mode disabled)." date="2025-12-27T13:30:04.355" /><!-- duration: 0ms -->
+        <step title="Ignoring FS watcher based recycle request as this is a classic Windows app." date="2025-12-27T13:30:04.375" /><!-- duration: 11ms -->
+        <step title="Deployment successful. DEPLOYMENTINFO: deploymentPath = ZipDeploy. Extract zip. , deployer = ZipDeploy, os = windows, sku = Basic, siteName = investmentportfolio-wcf, siteHostName = investmentportfolio-wcf.azurewebsites.net, deploymentStatus = Success" date="2025-12-27T13:30:04.466" /><!-- duration: 14ms -->
+      </step><!-- duration: 5186ms -->
+    </step><!-- duration: 6033ms -->
+    <step title="Cleaning up temp files" date="2025-12-27T13:30:04.887" /><!-- duration: 15ms -->
+    <step title="Skip function trigger and logicapp sync because function is not enabled." date="2025-12-27T13:30:04.921" /><!-- duration: 12ms -->
+  </step><!-- duration: 8902ms -->
+  <step title="LockFile &apos;C:\home\site\locks\deployments.lock&apos; released" date="2025-12-27T13:30:04.996" /><!-- duration: 0ms -->
+  <step title="Deleting shutdown sentinel file" date="2025-12-27T13:30:05.011" SemaphoreCount="8" /><!-- duration: 0ms -->
+</step><!-- duration: 9201ms -->

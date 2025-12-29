@@ -1,90 +1,91 @@
-using StackExchange.Redis;
 using InvestmentPortfolio.MarketData.Services;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ============================================================================
-// Controllers & OpenAPI
+// Controllers & Swagger
 // ============================================================================
 builder.Services.AddControllers();
-builder.Services.AddOpenApi(options =>
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
 {
-	options.AddDocumentTransformer((document, _, _) =>
+	options.SwaggerDoc("v1", new OpenApiInfo
 	{
-		document.Info = new OpenApiInfo
-		{
-			Title = "Market Data Service",
-			Version = "v1",
-			Description = "API for retrieving market prices, symbol search, and trending assets"
-		};
-		return Task.CompletedTask;
+		Title = "Market Data Service",
+		Version = "v1",
+		Description = "API for retrieving market prices, symbol search, and trending assets"
 	});
 });
 
 // ============================================================================
-// Memory Cache (SEMPRE necessário - usado pelo MarketDataService)
+// Cache & Services
 // ============================================================================
 builder.Services.AddMemoryCache();
-
-// ============================================================================
-// HTTP client + MarketDataService DI
-// ============================================================================
 builder.Services.AddHttpClient<IMarketDataService, MarketDataService>();
 
-// ============================================================================
-// Redis cache configuration (COM FALLBACK PARA MEMORY CACHE)
-// ============================================================================
-var redisConnection = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
-
-try
+// Redis with fallback to MemoryCache
+var redisConnection = builder.Configuration.GetConnectionString("Redis");
+if (!string.IsNullOrWhiteSpace(redisConnection))
 {
-	Console.WriteLine($"Attempting to connect to Redis: {redisConnection}");
-	var redis = ConnectionMultiplexer.Connect(redisConnection);
-	builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
-	builder.Services.AddSingleton<ICacheService, RedisCacheService>();
-	Console.WriteLine("? Redis connected successfully");
+	try
+	{
+		var redis = ConnectionMultiplexer.Connect(redisConnection);
+		builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+		builder.Services.AddSingleton<ICacheService, RedisCacheService>();
+	}
+	catch
+	{
+		builder.Services.AddSingleton<ICacheService, MemoryCacheService>();
+	}
 }
-catch (Exception ex)
+else
 {
-	Console.WriteLine($"??  Redis unavailable: {ex.Message}");
-	Console.WriteLine("   Using in-memory cache as fallback");
-
-	// Fallback para cache em memória quando Redis não está disponível
 	builder.Services.AddSingleton<ICacheService, MemoryCacheService>();
 }
 
 // ============================================================================
-// CORS configuration
+// CORS - Allow API, Frontend, and GitHub Pages
 // ============================================================================
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy("AllowFrontend", policy =>
 	{
-		policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
-			  .AllowAnyMethod()
-			  .AllowAnyHeader()
-			  .AllowCredentials();
+		policy.WithOrigins(
+			"http://localhost:3000",
+			"http://localhost:5173",
+			"https://investmentportfolio-api.azurewebsites.net",
+			"https://gabiquintao.github.io"  // GitHub Pages
+		)
+		.AllowAnyMethod()
+		.AllowAnyHeader()
+		.AllowCredentials();
 	});
 });
+
+// ============================================================================
+// Logging
+// ============================================================================
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 var app = builder.Build();
 
 // ============================================================================
-// Middleware pipeline
+// Middleware
 // ============================================================================
 app.UseCors("AllowFrontend");
 
-// Comentado para desenvolvimento
-// app.UseHttpsRedirection();
+// Swagger (sempre disponível)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+	c.SwaggerEndpoint("/swagger/v1/swagger.json", "Market Data API v1");
+});
 
-app.UseAuthorization();
-
-// ============================================================================
-// OpenAPI + Scalar UI
-// ============================================================================
-app.MapOpenApi();
 app.MapScalarApiReference(options =>
 {
 	options.WithTitle("Market Data Service")
@@ -96,7 +97,15 @@ app.MapScalarApiReference(options =>
 // ============================================================================
 app.MapControllers();
 
-Console.WriteLine("?? Market Data Service running on http://localhost:5088");
-Console.WriteLine("?? Supporting cryptocurrencies (CoinGecko) and stocks (Alpha Vantage)");
+// ============================================================================
+// Startup Log
+// ============================================================================
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+	var logger = app.Services.GetRequiredService<ILogger<Program>>();
+	logger.LogInformation("=== Market Data Service Started ===");
+	logger.LogInformation("Swagger: https://investmentportfolio-marketdata.azurewebsites.net/swagger");
+	logger.LogInformation("Health: https://investmentportfolio-marketdata.azurewebsites.net/api/market/health");
+});
 
 app.Run();

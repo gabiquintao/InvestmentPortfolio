@@ -1,0 +1,14 @@
+<step title="Incoming Request" date="2025-12-27T12:25:23.124" instance="d1e1e3" url="/api/siteextensions/Microsoft.AspNetCore.AzureAppServices.SiteExtension" method="PUT" type="request" pid="6340,2,14" Content-Length="0" Content-Type="application/json; charset=utf-8" Content-Encoding="utf-8" Accept-Encoding="gzip, deflate" Authorization="Bea..." Cookie="ARRAffinity=d1e1e3373fabf7fc1458b12fab8db25d2e27881092afe8b6154267802c94a3a3; ARRAffinitySameSite=d1e1e3373fabf7fc1458b12fab8db25d2e27881092afe8b6154267802c94a3a3" Host="investmentportfolio-wcf.scm.azurewebsites.net" User-Agent="Visual-Studio/18.1.1+11312.151 WebToolsExtension/18.0.338.63737" X-ARR-LOG-ID="99ca91f5-e265-4c30-b332-e4c8a01ac695" CLIENT-IP="176.79.166.60:49983" X-SITE-DEPLOYMENT-ID="investmentportfolio-wcf" WAS-DEFAULT-HOSTNAME="investmentportfolio-wcf.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/siteextensions/Microsoft.AspNetCore.AzureAppServices.SiteExtension" >
+  <step title="Installing Microsoft.AspNetCore.AzureAppServices.SiteExtension, version:  from feed: , packageUri: " date="2025-12-27T12:25:24.014" /><!-- duration: 14ms -->
+  <step title="Installing &apos;Microsoft.AspNetCore.AzureAppServices.SiteExtension&apos; version &apos;&apos; from &apos;&apos;" date="2025-12-27T12:25:24.481" >
+    <step title="Site Extension Microsoft.AspNetCore.AzureAppServices.SiteExtension remote version is 10.0.1" date="2025-12-27T12:25:27.248" /><!-- duration: 0ms -->
+    <step title="FeedExtensionsV2 search package by id: Microsoft.AspNetCore.AzureAppServices.SiteExtension and version: ." date="2025-12-27T12:25:27.248" /><!-- duration: 17ms -->
+    <step title="Install package: Microsoft.AspNetCore.AzureAppServices.SiteExtension." date="2025-12-27T12:25:27.264" >
+      <step title="Download site extension: Microsoft.AspNetCore.AzureAppServices.SiteExtension" date="2025-12-27T12:25:27.284" /><!-- duration: 42936ms -->
+      <step title="Check if applicationHost.xdt or scmApplicationHost.xdt file existed." date="2025-12-27T12:26:10.220" /><!-- duration: 0ms -->
+      <step title="Trigger site extension job" date="2025-12-27T12:26:10.235" /><!-- duration: 82ms -->
+    </step><!-- duration: 43440ms -->
+    <step title="Update arm settings for Microsoft.AspNetCore.AzureAppServices.SiteExtension installation. Status: OK" date="2025-12-27T12:26:11.503" /><!-- duration: 1842ms -->
+  </step><!-- duration: 48895ms -->
+  <step title="Outgoing response" date="2025-12-27T12:26:13.834" type="response" statusCode="200" statusText="OK" Server="Microsoft-IIS/10.0" x-ms-request-id="99ca91f5-e265-4c30-b332-e4c8a01ac695" Cache-Control="private" X-AspNet-Version="4.0.30319" Content-Type="application/json; charset=utf-8" /><!-- duration: 198ms -->
+</step><!-- duration: 50956ms -->

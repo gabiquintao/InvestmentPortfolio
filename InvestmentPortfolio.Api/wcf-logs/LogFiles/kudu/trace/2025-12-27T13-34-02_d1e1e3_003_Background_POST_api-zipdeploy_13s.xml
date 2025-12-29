@@ -1,0 +1,65 @@
+<step title="BackgroundTrace" date="2025-12-27T13:34:02.118" instance="d1e1e3" url="/api/zipdeploy" method="POST" >
+  <step title="Updating shutdown sentinel last write time" date="2025-12-27T13:34:02.133" SemaphoreCount="7" /><!-- duration: 19ms -->
+  <step title="LockFile &apos;C:\home\site\locks\deployments.lock&apos; acquired" date="2025-12-27T13:34:02.165" /><!-- duration: 0ms -->
+  <step title="Creating temporary deployment" date="2025-12-27T13:34:02.165" /><!-- duration: 143ms -->
+  <step title="Performing fetch based deployment" date="2025-12-27T13:34:02.337" >
+    <step title="Fetching changes." date="2025-12-27T13:34:02.727" /><!-- duration: 19ms -->
+    <step title="Starting LocalZipHandler" date="2025-12-27T13:34:02.774" /><!-- duration: 19ms -->
+    <step title="Cleaning up temp folders from previous zip deployments and extracting pushed zip file C:\local\Temp\zipdeploy\xwyyqz0i.zip (10.92 MB) to C:\local\Temp\zipdeploy\extracted" date="2025-12-27T13:34:02.852" /><!-- duration: 19ms -->
+    <step title="Cleaning up temp folders from previous zip deployments and extracting pushed zip file C:\local\Temp\zipdeploy\xwyyqz0i.zip (10.92 MB) to C:\local\Temp\zipdeploy\extracted" date="2025-12-27T13:34:02.883" >
+      <step title="Extracting 142 entries to C:\local\Temp\zipdeploy\extracted directory" date="2025-12-27T13:34:02.948" >
+        <step title="Extracting to C:\local\Temp\zipdeploy\extracted\cs\Microsoft.Data.SqlClient.resources.dll ..." date="2025-12-27T13:34:02.948" /><!-- duration: 61ms -->
+        <step title="Extracting to C:\local\Temp\zipdeploy\extracted\cs\System.ServiceModel.Primitives.resources.dll ..." date="2025-12-27T13:34:03.025" /><!-- duration: 0ms -->
+        <step title="Extracting to C:\local\Temp\zipdeploy\extracted\cs\System.Web.Services.Description.resources.dll ..." date="2025-12-27T13:34:03.040" /><!-- duration: 0ms -->
+        <step title="Extracting to C:\local\Temp\zipdeploy\extracted\de\Microsoft.Data.SqlClient.resources.dll ..." date="2025-12-27T13:34:03.040" /><!-- duration: 33ms -->
+        <step title="Extracting to C:\local\Temp\zipdeploy\extracted\de\System.ServiceModel.Primitives.resources.dll ..." date="2025-12-27T13:34:03.103" /><!-- duration: 15ms -->
+        <step title="Omitting extracting file traces ..." date="2025-12-27T13:34:03.118" /><!-- duration: 16ms -->
+      </step><!-- duration: 2170ms -->
+    </step><!-- duration: 2266ms -->
+    <step title="Before sending BuildRequestReceived status to /api/updatedeploystatus" date="2025-12-27T13:34:05.165" /><!-- duration: 31ms -->
+    <step title="DeploymentManager.Deploy(id:229c9ffd22594926b1136ba9a9318005)" date="2025-12-27T13:34:05.213" >
+      <step title="Collecting changeset information" date="2025-12-27T13:34:05.262" /><!-- duration: 48ms -->
+      <step title="Updating submodules" date="2025-12-27T13:34:05.321" >
+        <step title="Updating submodules." date="2025-12-27T13:34:05.368" /><!-- duration: 0ms -->
+      </step><!-- duration: 63ms -->
+      <step title="Preparing deployment for commit id &apos;229c9ffd22&apos;." date="2025-12-27T13:34:05.525" /><!-- duration: 20ms -->
+      <step title="Determining deployment builder" date="2025-12-27T13:34:05.603" >
+        <step title="Builder is BasicBuilder" date="2025-12-27T13:34:05.623" /><!-- duration: 0ms -->
+      </step><!-- duration: 46ms -->
+      <step title="Copying SSH keys" date="2025-12-27T13:34:05.665" /><!-- duration: 18ms -->
+      <step title="Building" date="2025-12-27T13:34:05.702" >
+        <step title="Generating deployment script." date="2025-12-27T13:34:05.760" /><!-- duration: 14ms -->
+        <step title="Generating deployment script" date="2025-12-27T13:34:05.774" >
+          <step title="Using cached version of the deployment script for command: -y --no-dot-deployment -r &quot;C:\local\Temp\zipdeploy\extracted&quot; -o &quot;C:\home\site\deployments\tools&quot; --basic --sitePath &quot;C:\local\Temp\zipdeploy\extracted&quot;" date="2025-12-27T13:34:05.983" /><!-- duration: 10ms -->
+          <step title="Using cached version of deployment script (command: &apos;azure -y --no-dot-deployment -r &quot;C:\local\Temp\zipdeploy\extracted&quot; -o &quot;C:\home\site\deployments\tools&quot; --basic --sitePath &quot;C:\local\Temp\zipdeploy\extracted&quot;&apos;)." date="2025-12-27T13:34:06.024" /><!-- duration: 18ms -->
+        </step><!-- duration: 269ms -->
+        <step title="Running deployment command..." date="2025-12-27T13:34:06.133" /><!-- duration: 16ms -->
+        <step title="Command: &quot;C:\home\site\deployments\tools\deploy.cmd&quot;" date="2025-12-27T13:34:06.180" /><!-- duration: 16ms -->
+        <step title="Executing external process" date="2025-12-27T13:34:06.247" type="process" path="starter.cmd" arguments="&quot;C:\home\site\deployments\tools\deploy.cmd&quot;" >
+          <step title="Handling Basic Web Site deployment." date="2025-12-27T13:34:09.112" /><!-- duration: 31ms -->
+          <step title="Creating app_offline.htm" date="2025-12-27T13:34:11.644" /><!-- duration: 0ms -->
+          <step title="KuduSync.NET from: &apos;C:\local\Temp\zipdeploy\extracted&apos; to: &apos;C:\home\site\wwwroot&apos;" date="2025-12-27T13:34:11.674" /><!-- duration: 0ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Wcf.dll&apos;" date="2025-12-27T13:34:11.706" /><!-- duration: 17ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Wcf.exe&apos;" date="2025-12-27T13:34:11.753" /><!-- duration: 18ms -->
+          <step title="Copying file: &apos;InvestmentPortfolio.Wcf.pdb&apos;" date="2025-12-27T13:34:11.784" /><!-- duration: 16ms -->
+          <step title="Copying file: &apos;publish\appsettings.json&apos;" date="2025-12-27T13:34:11.819" /><!-- duration: 12ms -->
+          <step title="Copying file: &apos;publish\appsettings.Production.json&apos;" date="2025-12-27T13:34:11.849" /><!-- duration: 19ms -->
+          <step title="Copying file: &apos;publish\InvestmentPortfolio.Wcf.deps.json&apos;" date="2025-12-27T13:34:11.878" /><!-- duration: 31ms -->
+          <step title="Copying file: &apos;publish\InvestmentPortfolio.Wcf.runtimeconfig.json&apos;" date="2025-12-27T13:34:11.926" /><!-- duration: 19ms -->
+          <step title="Copying file: &apos;publish\InvestmentPortfolio.Wcf.staticwebassets.endpoints.json&apos;" date="2025-12-27T13:34:11.956" /><!-- duration: 19ms -->
+          <step title="Copying file: &apos;publish\web.config&apos;" date="2025-12-27T13:34:11.987" /><!-- duration: 17ms -->
+          <step title="Deleting app_offline.htm" date="2025-12-27T13:34:12.023" /><!-- duration: 11ms -->
+          <step title="Finished successfully." date="2025-12-27T13:34:12.052" /><!-- duration: 0ms -->
+        </step><!-- duration: 5835ms -->
+        <step title="Running post deployment command(s)..." date="2025-12-27T13:34:12.441" /><!-- duration: 0ms -->
+        <step title="Triggering recycle (preview mode disabled)." date="2025-12-27T13:34:12.831" /><!-- duration: 0ms -->
+        <step title="Ignoring FS watcher based recycle request as this is a classic Windows app." date="2025-12-27T13:34:12.849" /><!-- duration: 13ms -->
+        <step title="Deployment successful. DEPLOYMENTINFO: deploymentPath = ZipDeploy. Extract zip. , deployer = ZipDeploy, os = windows, sku = Basic, siteName = investmentportfolio-wcf, siteHostName = investmentportfolio-wcf.azurewebsites.net, deploymentStatus = Success" date="2025-12-27T13:34:13.393" /><!-- duration: 18ms -->
+      </step><!-- duration: 8665ms -->
+    </step><!-- duration: 9165ms -->
+    <step title="Cleaning up temp files" date="2025-12-27T13:34:14.396" /><!-- duration: 29ms -->
+    <step title="Skip function trigger and logicapp sync because function is not enabled." date="2025-12-27T13:34:14.445" /><!-- duration: 10ms -->
+  </step><!-- duration: 12215ms -->
+  <step title="LockFile &apos;C:\home\site\locks\deployments.lock&apos; released" date="2025-12-27T13:34:14.581" /><!-- duration: 0ms -->
+  <step title="Deleting shutdown sentinel file" date="2025-12-27T13:34:14.612" SemaphoreCount="8" /><!-- duration: 18ms -->
+</step><!-- duration: 12512ms -->

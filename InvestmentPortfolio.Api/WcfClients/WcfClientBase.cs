@@ -29,7 +29,7 @@ namespace InvestmentPortfolio.Api.WcfClients
 				MaxBufferSize = int.MaxValue
 			};
 
-			// ✅ Detecta automaticamente HTTP vs HTTPS
+			// Detecta automaticamente HTTP vs HTTPS
 			if (endpointAddress.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
 			{
 				_logger.LogInformation("Using HTTPS transport security for: {Endpoint}", endpointAddress);
